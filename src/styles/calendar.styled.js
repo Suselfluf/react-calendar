@@ -4,7 +4,7 @@ import { device } from "../consts/Consts";
 export const Wrapper = styled.div`
   font-size: 2.5em;
   text-align: center;
-  display: grid;
+  display: block;
   border: 1px solid;
   background-color: #ffffff;
   justify-items: center;
@@ -15,29 +15,46 @@ export const Wrapper = styled.div`
 
 export const CalendarWindow = styled.div`
   color: #030303;
-  display: grid;
+  margin: auto;
+  display: block;
   border: 1px solid;
   background-color: #ffffff;
   @media ${device.mobile} {
     width: 740px;
   }
   @media ${device.mobileSmall} {
-    width: calc(100% - 20%);
-    min-width: 240px;
+    // width: calc(100%);
+    // min-width: 0px;
   }
 `;
 
 export const Header = styled.div`
   height: 148px;
   display: grid;
-  grid-template-columns: 2fr 1fr;
   align-items: center;
   justify-items: start;
-  margin: 0 0 0 5%;
+  @media ${device.mobile} {
+    grid-template-columns: 2fr 1fr;
+    margin: 0 0 0 5%;
+  }
+  @media ${device.mobileSmall} {
+    grid-template-columns: 1fr 1fr;
+    width: auto;
+  }
+`;
+
+export const AddIcon = styled.img`
+  @media ${device.mobile} {
+    width: 30px;
+    padding-left: 60%;
+  }
+  @media ${device.mobileSmall} {
+    width: 20px;
+  }
 `;
 
 export const MonthYearChoice = styled.p`
-  font-size: 0.6em;
+  font-size: 1.1rem;
 `;
 
 export const DaysOptionsSliderWrapper = styled.div`
@@ -45,6 +62,9 @@ export const DaysOptionsSliderWrapper = styled.div`
   height: 168px;
   @media ${device.mobile} {
     width: 740px;
+  }
+  @media ${device.mobileSmall} {
+    width: calc(100% - 60%);
   }
 `;
 
@@ -68,7 +88,13 @@ export const DateSlider = styled.div`
     display: flex;
     position: relative;
     alignitems: center;
-    gap: 4.1rem;
+    gap: 3.9rem;
+  }
+  @media ${device.mobileSmall} {
+    display: flex;
+    position: relative;
+    alignitems: center;
+    gap: 1.1rem;
   }
 `;
 
@@ -100,10 +126,10 @@ export const MonthSliderIcon = styled.img`
   }
 `;
 
-export const AddIcon = styled.img`
-  width: 30px;
-  padding-left: 60%;
-  @media ${device.mobileSmall} {
-    width: 20px;
-  }
+export const SliderDaysNamesP = styled.p`
+  font-size: 0.8rem;
+`;
+
+export const SliderDatesP = styled.p`
+  font-size: 1.5rem;
 `;

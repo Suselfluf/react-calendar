@@ -17,6 +17,8 @@ import {
   AddIcon,
   WeekDaysTitlesTable,
   DateSlider,
+  SliderDaysNamesP,
+  SliderDatesP,
 } from "../styles/calendar.styled.js";
 
 export default function CalendarPage(props) {
@@ -88,7 +90,7 @@ export default function CalendarPage(props) {
                   <DateSlider>
                     {daysRange.map((day) => (
                       <div>
-                        <p>
+                        <SliderDaysNamesP>
                           {
                             weekDayNames[
                               new Date(
@@ -98,8 +100,8 @@ export default function CalendarPage(props) {
                               ).getDay()
                             ]
                           }
-                        </p>
-                        <p
+                        </SliderDaysNamesP>
+                        <SliderDatesP
                           onClick={() => {
                             console.log(
                               new Date(date.getFullYear(), date.getMonth(), day)
@@ -108,7 +110,7 @@ export default function CalendarPage(props) {
                           key={day}
                         >
                           {day}
-                        </p>
+                        </SliderDatesP>
                       </div>
                     ))}
                   </DateSlider>
