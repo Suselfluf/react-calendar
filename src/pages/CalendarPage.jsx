@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { weekDayNames, monthRange, daysRange } from "../consts/Consts.jsx";
+import {
+  weekDayNames,
+  monthRange,
+  hourseRange,
+  timeRange,
+} from "../consts/Consts.jsx";
 import {
   Wrapper,
   CalendarWindow,
   Header,
   DaysOptionsSliderWrapper,
   WeekDaysTitlesLine,
-  WeekDaysSlider,
   YearMonthChoiceLine,
   MonthYearChoice,
   CalendarBody,
@@ -19,13 +23,17 @@ import {
   DateSlider,
   SliderDaysNamesP,
   SliderDatesP,
+  TimePickerBody,
+  TimePickerSideBar,
+  TimePickerSideBarP,
+  TimePickerCell,
+  TimePickerBodyColumn,
 } from "../styles/calendar.styled.js";
 
 export default function CalendarPage(props) {
-  // const tDay = new Date().getDay();
-  // const tMonth = new Date().getMonth();
-  // const tYear = new Date().getFullYear();
-
+  const weekDaysTopSlider = useRef(null);
+  const weekDaysBodySlider = useRef(null);
+  const weekDaysBodyTimeSlider = useRef(null);
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
   const [daysRange, setDaysrange] = useState([]);
@@ -35,12 +43,6 @@ export default function CalendarPage(props) {
       getDaysInAmonth(date);
     };
   }, [date]);
-
-  // setNextWeek = (current) => {};
-
-  const getDay = (s) => {
-    console.log(date);
-  };
 
   const getDaysInAmonth = (currentDate) => {
     let i = [];
@@ -53,7 +55,16 @@ export default function CalendarPage(props) {
       i.push(index);
     }
     setDaysrange(i);
-    // return new Date(year, month, 0).getDate();
+  };
+
+  const handleHorizontalScroll = (x) => {
+    weekDaysBodySlider.current.scrollLeft = x;
+    weekDaysTopSlider.current.scrollLeft = x;
+  };
+
+  const handleVerticalScroll = (y) => {
+    weekDaysBodyTimeSlider.current.scrollTop = y;
+    weekDaysBodySlider.current.scrollTop = y;
   };
 
   const handleMonthChange = (prevDate, sign) => {
@@ -85,11 +96,16 @@ export default function CalendarPage(props) {
           </Header>
           <DaysOptionsSliderWrapper>
             <DaysOptionsSliderContentWindow>
-              <WeekDaysTitlesLine>
+              <WeekDaysTitlesLine
+                ref={weekDaysTopSlider}
+                onScroll={(event) =>
+                  handleHorizontalScroll(event.currentTarget.scrollLeft)
+                }
+              >
                 <WeekDaysTitlesTable>
                   <DateSlider>
                     {daysRange.map((day) => (
-                      <div>
+                      <div key={day}>
                         <SliderDaysNamesP>
                           {
                             weekDayNames[
@@ -116,7 +132,6 @@ export default function CalendarPage(props) {
                   </DateSlider>
                 </WeekDaysTitlesTable>
               </WeekDaysTitlesLine>
-              <WeekDaysSlider></WeekDaysSlider>
               <YearMonthChoiceLine>
                 <MonthSliderIcon
                   src="less-icon.png"
@@ -134,7 +149,45 @@ export default function CalendarPage(props) {
               </YearMonthChoiceLine>
             </DaysOptionsSliderContentWindow>
           </DaysOptionsSliderWrapper>
-          <CalendarBody>bo</CalendarBody>
+          <CalendarBody>
+            <TimePickerSideBar
+              ref={weekDaysBodyTimeSlider}
+              onScroll={(event) =>
+                handleVerticalScroll(event.currentTarget.scrollTop)
+              }
+            >
+              {timeRange.map((value, index) => (
+                <TimePickerSideBarP key={index}>
+                  {`${new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDay(),
+                    index
+                  ).getHours()}:00`}
+                </TimePickerSideBarP>
+              ))}
+            </TimePickerSideBar>
+            <TimePickerBody
+              ref={weekDaysBodySlider}
+              onScroll={(event) => (
+                handleHorizontalScroll(event.currentTarget.scrollLeft),
+                handleVerticalScroll(event.currentTarget.scrollTop)
+              )}
+            >
+              {daysRange.map((day) => (
+                <div key={day}>
+                  <TimePickerBodyColumn>
+                    {timeRange.map((value, index) => (
+                      <TimePickerCell
+                        key={index}
+                        onClick={() => console.log(day, value)}
+                      ></TimePickerCell>
+                    ))}
+                  </TimePickerBodyColumn>
+                </div>
+              ))}
+            </TimePickerBody>
+          </CalendarBody>
           <CalendarFooter>Today</CalendarFooter>
         </CalendarWindow>
       </Wrapper>

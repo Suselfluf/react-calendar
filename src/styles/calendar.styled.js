@@ -69,32 +69,71 @@ export const DaysOptionsSliderWrapper = styled.div`
 `;
 
 export const DaysOptionsSliderContentWindow = styled.div`
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 13%;
 `;
 
 export const WeekDaysTitlesLine = styled.div`
-  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  height: 86px;
   @media ${device.mobile} {
-    margin-left: 5rem;
+    // margin-left: 4%;
     font-size: 1.2rem;
   }
 `;
 
-export const WeekDaysTitlesTable = styled.table``;
+export const WeekDaysTitlesTable = styled.div``;
 
 export const DateSlider = styled.div`
   @media ${device.mobile} {
     display: flex;
     position: relative;
     alignitems: center;
-    gap: 3.9rem;
+    // gap: 3.9rem;
   }
   @media ${device.mobileSmall} {
     display: flex;
     position: relative;
     alignitems: center;
     gap: 1.1rem;
+  }
+`;
+
+export const CalendarBody = styled.div`
+  height: 905px;
+  display: grid;
+  overflow: scroll;
+  grid-template-columns: 13% 87%;
+`;
+
+export const TimePickerBody = styled.div`
+  overflow-x: scroll;
+  margin-top: 1.5%;
+  @media ${device.mobile} {
+    display: flex;
+    position: relative;
+    alignitems: center;
+  }
+  @media ${device.mobileSmall} {
+    display: flex;
+    position: relative;
+    alignitems: center;
+    gap: 1.1rem;
+  }
+`;
+
+export const TimePickerSideBar = styled.div`
+  text-align: end;
+  margin-right: 5%;
+  color: #c0c0c0;
+  overflow: scroll;
+`;
+
+export const TimePickerSideBarP = styled.p`
+  @media ${device.mobile} {
+    font-size: 1.1rem;
+    margin: 0px;
+    height: 72px;
   }
 `;
 
@@ -106,12 +145,8 @@ export const YearMonthChoiceLine = styled.div`
   align-items: center;
   justify-items: center;
   @media ${device.mobile} {
-    margin: 0 1.6rem 0 4.5rem;
+    margin: 0 1.9rem 0 2rem;
   }
-`;
-
-export const CalendarBody = styled.div`
-  height: 905px;
 `;
 
 export const CalendarFooter = styled.div`
@@ -127,9 +162,32 @@ export const MonthSliderIcon = styled.img`
 `;
 
 export const SliderDaysNamesP = styled.p`
+  font-size: 1rem;
+  font-weight: bold;
+  @media ${device.mobile} {
+    width: 92px;
+  }
+`;
+
+export const TimePickerBodyColumn = styled.p`
   font-size: 0.8rem;
+
+  @media ${device.mobile} {
+    width: 92px;
+    margin: 0;
+  }
 `;
 
 export const SliderDatesP = styled.p`
   font-size: 1.5rem;
+`;
+
+export const TimePickerCell = styled.p`
+  @media ${device.mobile} {
+    width: 92px;
+    height: 70px;
+    margin: 0;
+    border: #e6e6e6 1px solid;
+    border-left: 0px;
+  }
 `;
