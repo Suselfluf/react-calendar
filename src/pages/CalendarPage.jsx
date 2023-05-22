@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
 import {
   weekDayNames,
   monthRange,
   hourseRange,
   timeRange,
+  StyleActiveDay,
 } from "../consts/Consts.jsx";
+// import styles from "../styles/calendarPage.module.css";
+import "../styles/calendarPage.module.css";
 import {
   Wrapper,
   CalendarWindow,
@@ -28,6 +30,8 @@ import {
   TimePickerSideBarP,
   TimePickerCell,
   TimePickerBodyColumn,
+  FooterParagraph,
+  ActiveSliderDate,
 } from "../styles/calendar.styled.js";
 
 export default function CalendarPage(props) {
@@ -37,6 +41,9 @@ export default function CalendarPage(props) {
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
   const [daysRange, setDaysrange] = useState([]);
+
+  const [_is_day_active, set_is_day_active] = useState(false);
+  const [_is_booked, set_is_booked] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -55,6 +62,12 @@ export default function CalendarPage(props) {
       i.push(index);
     }
     setDaysrange(i);
+  };
+
+  const handleDayChoose = (date) => {
+    // sc-dPwPAC csYSeg
+    set_is_day_active(!_is_day_active);
+    // StyleActiveDay(date.target.style);
   };
 
   const handleHorizontalScroll = (x) => {
@@ -94,6 +107,7 @@ export default function CalendarPage(props) {
             <AddIcon src="add-sign.png"></AddIcon>
             {/* <img  width={35} alt="" /> */}
           </Header>
+          {/* <ActiveSliderDate>Example</ActiveSliderDate> */}
           <DaysOptionsSliderWrapper>
             <DaysOptionsSliderContentWindow>
               <WeekDaysTitlesLine
@@ -118,15 +132,21 @@ export default function CalendarPage(props) {
                           }
                         </SliderDaysNamesP>
                         <SliderDatesP
-                          onClick={() => {
-                            console.log(
-                              new Date(date.getFullYear(), date.getMonth(), day)
-                            );
+                          onClick={(value) => {
+                            handleDayChoose(value);
                           }}
                           key={day}
                         >
-                          {day}
+                          {day + 1}
                         </SliderDatesP>
+                        {/* <p
+                          className={`sliderDates${toggleDayActive}`}
+                          onClick={(value) => {
+                            handleDayChoose(value);
+                          }}
+                        >
+                          {day + 1}
+                        </p> */}
                       </div>
                     ))}
                   </DateSlider>
@@ -188,7 +208,10 @@ export default function CalendarPage(props) {
               ))}
             </TimePickerBody>
           </CalendarBody>
-          <CalendarFooter>Today</CalendarFooter>
+          <CalendarFooter>
+            <FooterParagraph>Today</FooterParagraph>
+            {_is_day_active && <FooterParagraph>Delete</FooterParagraph>}
+          </CalendarFooter>
         </CalendarWindow>
       </Wrapper>
     </>

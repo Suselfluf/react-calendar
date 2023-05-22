@@ -1,0 +1,17 @@
+.sliderDates {
+  font-size: 1.5rem;
+  @media (max-width: 740px) {
+    font-size: 1.1rem;
+    margin: 0;
+    height: 25px;
+  }
+}
+.sliderDates.active {
+  font-size: 1.5rem;
+  color: red;
+  @media (max-width: 740px) {
+    font-size: 1.1rem;
+    margin: 0;
+    height: 25px;
+  }
+}

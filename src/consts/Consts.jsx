@@ -57,6 +57,15 @@ export const hourseRange = [
   { 23: "23:00" },
 ];
 
+export const StyleActiveDay = (day) => {
+  day.backgroundColor = "red";
+  day.borderRadius = "50px";
+  day.width = "28px";
+  day.marginLeft = "35%";
+  day.textAlign = "center";
+  day.color = "white";
+};
+
 export const timeRange = [
   "00:00",
   "01:00",
