@@ -66,6 +66,21 @@ export const StyleActiveDay = (day) => {
   day.color = "white";
 };
 
+export const removeStyle = (day) => {
+  day.removeProperty("backgroundColor");
+  day.removeProperty("borderRadius");
+  day.removeProperty("width");
+  day.removeProperty("marginLeft");
+  day.removeProperty("textAlign");
+  day.removeProperty("color");
+  // day.backgroundColor = "red";
+  // day.borderRadius = "50px";
+  // day.width = "28px";
+  // day.marginLeft = "35%";
+  // day.textAlign = "center";
+  // day.color = "white";
+};
+
 export const timeRange = [
   "00:00",
   "01:00",

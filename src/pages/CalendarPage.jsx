@@ -33,6 +33,7 @@ import {
   FooterParagraph,
   ActiveSliderDate,
 } from "../styles/calendar.styled.js";
+import SliderDay from "../components/SliderDay.jsx";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
@@ -46,27 +47,40 @@ export default function CalendarPage(props) {
   const [_is_booked, set_is_booked] = useState(false);
 
   useEffect(() => {
+    // console.log(
+    //   new Date(
+    //     new Date().getFullYear(),
+    //     new Date().getMonth(),
+    //     new Date().getDate()
+    //   )
+    // );
+    // console.log(
+    //   new Date(new Date().getFullYear(), new Date().getMonth(), 0).getDate()
+    // );
     return () => {
       getDaysInAmonth(date);
     };
   }, [date]);
 
   const getDaysInAmonth = (currentDate) => {
+    // for some reason it is not correct
+    console.log(currentDate);
     let i = [];
     const limit = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
       0
     ).getDate();
-    for (let index = 0; index <= limit; index++) {
+    for (let index = 0; index < limit; index++) {
       i.push(index);
     }
     setDaysrange(i);
+    console.log(i.length);
   };
 
   const handleDayChoose = (date) => {
-    // sc-dPwPAC csYSeg
-    set_is_day_active(!_is_day_active);
+    // set_is_day_active(!_is_day_active);
+    StyleActiveDay(date.target.style);
     // StyleActiveDay(date.target.style);
   };
 
@@ -81,6 +95,7 @@ export default function CalendarPage(props) {
   };
 
   const handleMonthChange = (prevDate, sign) => {
+    // Calendar slider in the top should be updated as sonn as date chanded asynchronously
     month == 0
       ? setDate(
           new Date(
@@ -119,35 +134,12 @@ export default function CalendarPage(props) {
                 <WeekDaysTitlesTable>
                   <DateSlider>
                     {daysRange.map((day) => (
-                      <div key={day}>
-                        <SliderDaysNamesP>
-                          {
-                            weekDayNames[
-                              new Date(
-                                date.getFullYear(),
-                                date.getMonth(),
-                                day
-                              ).getDay()
-                            ]
-                          }
-                        </SliderDaysNamesP>
-                        <SliderDatesP
-                          onClick={(value) => {
-                            handleDayChoose(value);
-                          }}
-                          key={day}
-                        >
-                          {day + 1}
-                        </SliderDatesP>
-                        {/* <p
-                          className={`sliderDates${toggleDayActive}`}
-                          onClick={(value) => {
-                            handleDayChoose(value);
-                          }}
-                        >
-                          {day + 1}
-                        </p> */}
-                      </div>
+                      <SliderDay
+                        day={day}
+                        date={date}
+                        handleDayChoose={handleDayChoose}
+                        key={day}
+                      ></SliderDay>
                     ))}
                   </DateSlider>
                 </WeekDaysTitlesTable>
@@ -200,7 +192,7 @@ export default function CalendarPage(props) {
                     {timeRange.map((value, index) => (
                       <TimePickerCell
                         key={index}
-                        onClick={() => console.log(day, value)}
+                        // onClick={() => console.log(day, value)}
                       ></TimePickerCell>
                     ))}
                   </TimePickerBodyColumn>
