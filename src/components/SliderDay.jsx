@@ -44,7 +44,7 @@ export default function SliderDay(props) {
           }}
           key={props.day}
         >
-          {props.day + 1}
+          {props.day}
         </styled.SliderDatesP>
         {/* <p
                           className={`sliderDates${toggleDayActive}`}

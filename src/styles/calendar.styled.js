@@ -85,6 +85,7 @@ export const DaysOptionsSliderContentWindow = styled.div`
 export const WeekDaysTitlesLine = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
+  width: 95%;
 
   @media ${device.mobile} {
     font-size: 1.2rem;

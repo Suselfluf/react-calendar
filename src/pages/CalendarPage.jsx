@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useReducer } from "react";
 import {
   weekDayNames,
   monthRange,
@@ -42,44 +42,40 @@ export default function CalendarPage(props) {
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
   const [daysRange, setDaysrange] = useState([]);
+  const [days_limit, setDays_limit] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
+  );
 
-  const [_is_day_active, set_is_day_active] = useState(false);
+  const [_is_time_active, set_is_time_active] = useState(false);
   const [_is_booked, set_is_booked] = useState(false);
 
   useEffect(() => {
-    // console.log(
-    //   new Date(
-    //     new Date().getFullYear(),
-    //     new Date().getMonth(),
-    //     new Date().getDate()
-    //   )
-    // );
-    // console.log(
-    //   new Date(new Date().getFullYear(), new Date().getMonth(), 0).getDate()
-    // );
+    getDaysInAmonth(date);
+  }, [date]);
+
+  useEffect(() => {
     return () => {
       getDaysInAmonth(date);
     };
-  }, [date]);
+  }, []);
 
   const getDaysInAmonth = (currentDate) => {
-    // for some reason it is not correct
-    console.log(currentDate);
     let i = [];
     const limit = new Date(
       currentDate.getFullYear(),
-      currentDate.getMonth(),
+      currentDate.getMonth() + 1,
       0
     ).getDate();
-    for (let index = 0; index < limit; index++) {
+    for (let index = 1; index <= limit; index++) {
       i.push(index);
     }
+    console.log(limit);
     setDaysrange(i);
-    console.log(i.length);
   };
 
   const handleDayChoose = (date) => {
     // set_is_day_active(!_is_day_active);
+    console.log(date.target.style);
     StyleActiveDay(date.target.style);
     // StyleActiveDay(date.target.style);
   };
@@ -111,6 +107,7 @@ export default function CalendarPage(props) {
             prevDate.getDate()
           )
         );
+    // return getDaysInAmonth(date);
   };
 
   return (
@@ -141,21 +138,34 @@ export default function CalendarPage(props) {
                         key={day}
                       ></SliderDay>
                     ))}
+                    {/* {[...Array(days_limit)].map((x) => {
+                      console.log(x);
+                      return <p>s</p>;
+                    })} */}
                   </DateSlider>
                 </WeekDaysTitlesTable>
               </WeekDaysTitlesLine>
               <YearMonthChoiceLine>
                 <MonthSliderIcon
                   src="less-icon.png"
-                  onClick={(e) => handleMonthChange(date, -1)}
+                  onClick={(e) =>
+                    handleMonthChange(date, -1).then((month) =>
+                      console.log("sds")
+                    )
+                  }
                   style={{ justifySelf: "start" }}
                 ></MonthSliderIcon>
                 <MonthYearChoice>
-                  {monthRange[date.getMonth()]} {date.getFullYear()}
+                  {monthRange[date.getMonth()]} {date.getFullYear()}{" "}
+                  {new Date(
+                    date.getFullYear(),
+                    date.getMonth() + 1,
+                    0
+                  ).getDate()}
                 </MonthYearChoice>
                 <MonthSliderIcon
                   src="more-icon.png"
-                  onClick={(e) => handleMonthChange(date, +1)}
+                  onClick={(e) => handleMonthChange(date, 1)}
                   style={{ justifySelf: "end" }}
                 ></MonthSliderIcon>
               </YearMonthChoiceLine>
@@ -202,7 +212,10 @@ export default function CalendarPage(props) {
           </CalendarBody>
           <CalendarFooter>
             <FooterParagraph>Today</FooterParagraph>
-            {_is_day_active && <FooterParagraph>Delete</FooterParagraph>}
+            {_is_time_active && <FooterParagraph>Delete</FooterParagraph>}
+            {/* <div>
+              
+            </div> */}
           </CalendarFooter>
         </CalendarWindow>
       </Wrapper>
