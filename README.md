@@ -13,11 +13,11 @@
 - [Delete Mobile](./2.%20Delete%20Mobile@2x.png) - После выбора события, появляется кнопка Delete.
 
 <!-- ![](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/2.%20Delete%20Mobile%402x.png) -->
-<img src="[https://github.com/Suselfluf/react-calendar/blob/main/design-assets/1.%20Main%20Mobile%402x.png](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/2.%20Delete%20Mobile%402x.png)" width="30%" height="30%" />
+<img src="https://github.com/Suselfluf/react-calendar/blob/main/design-assets/2.%20Delete%20Mobile%402x.png" width="30%" height="30%" />
 - [Add Mobile](./3.%20Add%20Mobile@2x.png) - После нажатия `+` появляется стандартный попап (функция `prompt`) добавления события.
 
 <!-- ![](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/3.%20Add%20Mobile%402x.png) -->
-<img src="[https://github.com/Suselfluf/react-calendar/blob/main/design-assets/1.%20Main%20Mobile%402x.png](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/3.%20Add%20Mobile%402x.png)" width="30%" height="30%" />
+<img src="https://github.com/Suselfluf/react-calendar/blob/main/design-assets/3.%20Add%20Mobile%402x.png" width="30%" height="30%" />
 
 Для ширины страницы `<= 740px` календарь равномерно растягивается. Для ширины страницы `> 740px` ширина календаря `= 740px`, календарь выравнивантвается по горизонтали по центру страницы.
 
