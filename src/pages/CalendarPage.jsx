@@ -24,7 +24,6 @@ import {
   WeekDaysTitlesTable,
   DateSlider,
   SliderDaysNamesP,
-  SliderDatesP,
   TimePickerBody,
   TimePickerSideBar,
   TimePickerSideBarP,
@@ -34,6 +33,9 @@ import {
   ActiveSliderDate,
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { set_day } from "../redux/models/calendar/calendarSlice.js";
+import { removeStyle } from "../consts/Consts.jsx";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
@@ -46,8 +48,16 @@ export default function CalendarPage(props) {
     new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
   );
 
+  const reservations = [
+    "Sun Jun 04 2023 03:00:00 GMT+0300 (Moscow Standard Time)",
+  ];
+
   const [_is_time_active, set_is_time_active] = useState(false);
   const [_is_booked, set_is_booked] = useState(false);
+
+  const chosen_days = useSelector((state) => state.calendarSlice.date);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getDaysInAmonth(date);
@@ -56,6 +66,7 @@ export default function CalendarPage(props) {
   useEffect(() => {
     return () => {
       getDaysInAmonth(date);
+      console.log(chosen_days);
     };
   }, []);
 
@@ -69,16 +80,22 @@ export default function CalendarPage(props) {
     for (let index = 1; index <= limit; index++) {
       i.push(index);
     }
-    console.log(limit);
     setDaysrange(i);
   };
 
-  const handleDayChoose = (date) => {
-    // set_is_day_active(!_is_day_active);
-    console.log(date.target.style);
-    StyleActiveDay(date.target.style);
-    // StyleActiveDay(date.target.style);
-  };
+  // const handleDayChoose = (date) => {
+  //   dispatch(set_day(date.target.id));
+  //   let prev_date = document.getElementById(
+  //     // Get the previous date
+  //     chosen_days[chosen_days.length - 1]
+  //   );
+  //   // console.log(date.target.id);
+  //   // console.log(chosen_days[chosen_days.length - 1]);
+  //   if (prev_date != null) {
+  //     removeStyle(prev_date.style);
+  //     styleChosenDay(date.target.style);
+  //   }
+  // };
 
   const handleHorizontalScroll = (x) => {
     weekDaysBodySlider.current.scrollLeft = x;
@@ -91,6 +108,14 @@ export default function CalendarPage(props) {
   };
 
   const handleMonthChange = (prevDate, sign) => {
+    let prev_date = document.getElementById(
+      // Get the previous date
+      chosen_days[chosen_days.length - 1]
+    );
+    if (prev_date != null) {
+      removeStyle(prev_date.style);
+    }
+
     // Calendar slider in the top should be updated as sonn as date chanded asynchronously
     month == 0
       ? setDate(
@@ -131,12 +156,7 @@ export default function CalendarPage(props) {
                 <WeekDaysTitlesTable>
                   <DateSlider>
                     {daysRange.map((day) => (
-                      <SliderDay
-                        day={day}
-                        date={date}
-                        handleDayChoose={handleDayChoose}
-                        key={day}
-                      ></SliderDay>
+                      <SliderDay day={day} date={date} key={day}></SliderDay>
                     ))}
                     {/* {[...Array(days_limit)].map((x) => {
                       console.log(x);
@@ -148,11 +168,7 @@ export default function CalendarPage(props) {
               <YearMonthChoiceLine>
                 <MonthSliderIcon
                   src="less-icon.png"
-                  onClick={(e) =>
-                    handleMonthChange(date, -1).then((month) =>
-                      console.log("sds")
-                    )
-                  }
+                  onClick={(e) => handleMonthChange(date, -1)}
                   style={{ justifySelf: "start" }}
                 ></MonthSliderIcon>
                 <MonthYearChoice>
@@ -202,7 +218,25 @@ export default function CalendarPage(props) {
                     {timeRange.map((value, index) => (
                       <TimePickerCell
                         key={index}
-                        // onClick={() => console.log(day, value)}
+                        {...reservations.map(
+                          (value, n) =>
+                            new Date(
+                              date.getFullYear(),
+                              date.getMonth(),
+                              day,
+                              index
+                            ).toString() == value && console.log("is")
+                        )}
+                        onClick={() =>
+                          console.log(
+                            new Date(
+                              date.getFullYear(),
+                              date.getMonth(),
+                              day,
+                              index
+                            )
+                          )
+                        }
                       ></TimePickerCell>
                     ))}
                   </TimePickerBodyColumn>

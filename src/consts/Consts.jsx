@@ -38,18 +38,12 @@ export const StyleActiveDay = (day) => {
 };
 
 export const removeStyle = (day) => {
-  day.removeProperty("backgroundColor");
-  day.removeProperty("borderRadius");
+  day.removeProperty("background-color");
+  day.removeProperty("border-radius");
   day.removeProperty("width");
-  day.removeProperty("marginLeft");
-  day.removeProperty("textAlign");
+  day.removeProperty("margin-left");
+  day.removeProperty("text-align");
   day.removeProperty("color");
-  // day.backgroundColor = "red";
-  // day.borderRadius = "50px";
-  // day.width = "28px";
-  // day.marginLeft = "35%";
-  // day.textAlign = "center";
-  // day.color = "white";
 };
 
 export const timeRange = [

@@ -1,11 +1,11 @@
 import "./App.css";
 import CalendarPage from "./pages/CalendarPage.jsx";
-import store from "./store/store";
+import configureStore from "./redux/store";
 import { Provider } from "react-redux";
 function App() {
   return (
     <>
-      <Provider store={store}>
+      <Provider store={configureStore}>
         <CalendarPage></CalendarPage>
       </Provider>
     </>
