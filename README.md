@@ -7,7 +7,7 @@
 Макеты c версткой календаря для мобильных браузеров:
 
 - [Main Mobile](./1.%20Main%20Mobile@2x.png) - Основной вид календаря.
-![](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/1.%20Main%20Mobile%402x.png)
+![](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/1.%20Main%20Mobile%402x.png | width = 120)
 - [Delete Mobile](./2.%20Delete%20Mobile@2x.png) - После выбора события, появляется кнопка Delete.
 - [Add Mobile](./3.%20Add%20Mobile@2x.png) - После нажатия `+` появляется стандартный попап (функция `prompt`) добавления события.
 
