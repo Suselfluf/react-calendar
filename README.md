@@ -8,7 +8,8 @@
 
 - [Main Mobile](./1.%20Main%20Mobile@2x.png) - Основной вид календаря.
 
-![](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/1.%20Main%20Mobile%402x.png)
+<!-- ![](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/1.%20Main%20Mobile%402x.png) -->
+<img src="https://github.com/Suselfluf/react-calendar/blob/main/design-assets/1.%20Main%20Mobile%402x.png" width="50%" height="50%" />
 - [Delete Mobile](./2.%20Delete%20Mobile@2x.png) - После выбора события, появляется кнопка Delete.
 
 ![](https://github.com/Suselfluf/react-calendar/blob/main/design-assets/2.%20Delete%20Mobile%402x.png)
