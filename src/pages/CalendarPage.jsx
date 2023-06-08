@@ -49,20 +49,28 @@ export default function CalendarPage(props) {
   const [time, set_time] = useState(new Date());
   const [y_align, set_y_align] = useState(0);
 
-  const reservations = [
-    "Sun Jun 04 2023 03:00:00 GMT+0300 (Moscow Standard Time)",
-  ];
-
   const [_is_time_active, set_is_time_active] = useState(false);
   const [_is_booked, set_is_booked] = useState(false);
 
   const chosen_days = useSelector((state) => state.calendarSlice.date);
+  const reservations = useSelector(
+    (state) => state.reservationSlice.reservations
+  );
 
   const hr = useRef(null);
 
   useEffect(() => {
     getDaysInAmonth(date);
   }, [date]);
+
+  // useEffect(() => {
+  //   console.log(reservations);
+  //   // reservations.forEach((element) => {
+  //   //   let iterableElement = document.getElementById(element);
+  //   //   console.log(iterableElement);
+  //   //   // console.log(element);
+  //   // });
+  // }, [reservations]);
 
   useEffect(() => {
     const timerId = setInterval(updateTime, 1000);
@@ -91,6 +99,11 @@ export default function CalendarPage(props) {
 
   const updateTime = () => {
     set_time(new Date());
+  };
+
+  const style_selected_time = (time) => {
+    // For some reason calling this function every second
+    // console.log(time);
   };
 
   // const handleDayChoose = (date) => {
@@ -152,19 +165,16 @@ export default function CalendarPage(props) {
             prevDate.getDate()
           )
         );
-    // return getDaysInAmonth(date);
   };
 
   return (
     <>
-      <Wrapper onClick={() => console.log(new Date().getHours())}>
+      <Wrapper>
         <CalendarWindow>
           <Header>
             <p style={{ marginRight: "20px" }}>Interview Calendar</p>
             <AddIcon src="add-sign.png"></AddIcon>
-            {/* <img  width={35} alt="" /> */}
           </Header>
-          {/* <ActiveSliderDate>Example</ActiveSliderDate> */}
           <DaysOptionsSliderWrapper>
             <DaysOptionsSliderContentWindow>
               <WeekDaysTitlesLine
@@ -236,15 +246,31 @@ export default function CalendarPage(props) {
                     {timeRange.map((value, index) => (
                       <TimePickerCell
                         key={index}
-                        // {...reservations.map(
-                        //   (value, n) =>
-                        //     new Date(
-                        //       date.getFullYear(),
-                        //       date.getMonth(),
-                        //       day,
-                        //       index
-                        //     ).toString() == value && console.log("is")
-                        // )}
+                        {...reservations.map(
+                          (value, n) =>
+                            new Date(
+                              date.getFullYear(),
+                              date.getMonth(),
+                              day,
+                              index
+                            ).toString() == value &&
+                            style_selected_time(
+                              new Date(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                day,
+                                index
+                              )
+                            )
+                        )}
+                        id={
+                          new Date(
+                            date.getFullYear(),
+                            date.getMonth(),
+                            day,
+                            index
+                          )
+                        }
                         onClick={() =>
                           console.log(
                             new Date(
