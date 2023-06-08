@@ -5,7 +5,6 @@ export const Wrapper = styled.div`
   font-size: 2.5em;
   text-align: center;
   display: block;
-  border: 1px solid;
   background-color: #ffffff;
   justify-items: center;
   @media ${device.mobileSmall} {
@@ -78,7 +77,6 @@ export const DaysOptionsSliderWrapper = styled.div`
 export const DaysOptionsSliderContentWindow = styled.div`
   margin-left: 13%;
   @media ${device.mobileSmall} {
-    margin-left: 13%;
   }
 `;
 
@@ -87,12 +85,18 @@ export const WeekDaysTitlesLine = styled.div`
   overflow-y: hidden;
   width: 95%;
 
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
   @media ${device.mobile} {
     font-size: 1.2rem;
-    height: 86px;
+    height: 93px;
   }
   @media ${device.mobileSmall} {
-    height: 60px;
+    height: 63px;
+    width: 95%;
   }
 `;
 
@@ -114,14 +118,19 @@ export const CalendarBody = styled.div`
   height: 905px;
   display: grid;
   overflow: scroll;
+  position: relative;
   grid-template-columns: 13% 87%;
   @media ${device.mobileSmall} {
     height: 65vh;
+    padding-right: 10px;
   }
 `;
 
 export const TimePickerBody = styled.div`
   overflow-x: scroll;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 
   @media ${device.mobile} {
     margin-top: 1.5%;
@@ -139,9 +148,12 @@ export const TimePickerBody = styled.div`
 
 export const TimePickerSideBar = styled.div`
   text-align: end;
-  // margin-right: 5%;
   color: #c0c0c0;
   overflow: scroll;
+  padding-bottom: 10px;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 `;
 
 export const TimePickerSideBarP = styled.p`
@@ -188,7 +200,7 @@ export const SliderDaysNamesP = styled.p`
   }
   @media ${device.mobileSmall} {
     font-size: 0.7rem;
-    width: 14.5vw;
+    width: 12.14vw;
   }
 `;
 
@@ -225,7 +237,7 @@ export const TimePickerCell = styled.p`
     height: 70px;
   }
   @media ${device.mobileSmall} {
-    width: 14.3vw;
+    width: 12vw;
     height: 50px;
   }
 `;
@@ -256,5 +268,19 @@ export const ActiveSliderDate = styled.p`
     font-size: 1.1rem;
     margin: 0;
     height: 25px;
+  }
+`;
+
+export const TimeLineHr = styled.hr`
+  height: 0.5px;
+  border-top: 1px solid #eb473d;
+  background: #eb473d;
+  position: absolute;
+  margin: 10px 0 0 13%;
+  width: 642px;
+  overflow: hidden;
+  @media ${device.mobileSmall} {
+    top: -5px;
+    width: 85%;
   }
 `;

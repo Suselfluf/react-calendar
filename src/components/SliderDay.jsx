@@ -16,6 +16,11 @@ export default function SliderDay(props) {
     return () => {
       try {
         let el = document.getElementById(chosen_days);
+        let x_padding = (el.getBoundingClientRect().left - 500).toFixed(0);
+        if (x_padding > 130) {
+          props.handleHorizontalScroll(x_padding);
+        }
+
         StyleActiveDay(el.style);
       } catch (err) {
         // console.log(err);
@@ -25,14 +30,9 @@ export default function SliderDay(props) {
 
   const [_choseDay, set_choseDay] = useState(elem.current);
 
-  //   const styleActiveDay = (prevEl, currentEl) => {
-  //     set_choseDay(currentEl);
-  //     StyleActiveDay(currentEl.target.style);
-  //   };
-
   return (
     <>
-      <div>
+      <div onClick={() => console.log()}>
         <styled.SliderDaysNamesP>
           {
             weekDayNames[
