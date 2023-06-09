@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  reservations: ["Fri Jun 09 2023 03:00:00 GMT+0300 (Moscow Standard Time)"],
+  reservations: ["Sun Jun 11 2023 03:00:00 GMT+0300 (Moscow Standard Time)"],
 };
 
 export const reservationSlicer = createSlice({

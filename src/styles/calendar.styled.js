@@ -67,7 +67,7 @@ export const DaysOptionsSliderWrapper = styled.div`
   height: 168px;
   border: 1px solid #ebebeb;
   @media ${device.mobile} {
-    width: 740px;
+    width: 738px;
   }
   @media ${device.mobileSmall} {
     height: 98px;
@@ -117,7 +117,6 @@ export const DateSlider = styled.div`
 export const CalendarBody = styled.div`
   height: 905px;
   display: grid;
-  overflow: scroll;
   position: relative;
   grid-template-columns: 13% 87%;
   @media ${device.mobileSmall} {
@@ -231,7 +230,6 @@ export const TimePickerCell = styled.p`
   margin: 0;
   border: #e6e6e6 1px solid;
   border-left: 0px;
-
   @media ${device.mobile} {
     width: 92px;
     height: 70px;

@@ -1,11 +1,5 @@
 import React, { useEffect, useState, useRef, useReducer } from "react";
-import {
-  weekDayNames,
-  monthRange,
-  hourseRange,
-  timeRange,
-  StyleActiveDay,
-} from "../consts/Consts.jsx";
+import { monthRange, timeRange } from "../consts/Consts.jsx";
 // import styles from "../styles/calendarPage.module.css";
 import "../styles/calendarPage.module.css";
 import {
@@ -35,42 +29,44 @@ import {
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { set_day } from "../redux/models/calendar/calendarSlice.js";
+import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
   const weekDaysBodySlider = useRef(null);
   const weekDaysBodyTimeSlider = useRef(null);
+
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
   const [daysRange, setDaysrange] = useState([]);
-
-  const [time, set_time] = useState(new Date());
   const [y_align, set_y_align] = useState(0);
-
+  const [counter, set_counter] = useState(0);
   const [_is_time_active, set_is_time_active] = useState(false);
   const [_is_booked, set_is_booked] = useState(false);
+
+  const initialDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds()
+  );
 
   const chosen_days = useSelector((state) => state.calendarSlice.date);
   const reservations = useSelector(
     (state) => state.reservationSlice.reservations
   );
+  const timer = useSelector((state) => state.timerSlice.timer);
+  const dispatch = useDispatch();
 
   const hr = useRef(null);
+  const calendar_body = useRef(null);
 
   useEffect(() => {
     getDaysInAmonth(date);
   }, [date]);
-
-  // useEffect(() => {
-  //   console.log(reservations);
-  //   // reservations.forEach((element) => {
-  //   //   let iterableElement = document.getElementById(element);
-  //   //   console.log(iterableElement);
-  //   //   // console.log(element);
-  //   // });
-  // }, [reservations]);
 
   useEffect(() => {
     const timerId = setInterval(updateTime, 1000);
@@ -81,8 +77,24 @@ export default function CalendarPage(props) {
   }, []);
 
   useEffect(() => {
-    hr.current.style.top = `${y_align + new Date().getMinutes() / 10}px`; // Might need change since is approximate
-  }, [time]);
+    set_counter(counter + 1);
+    let time_gap = parseInt((timer.getTime() - initialDate.getTime()) / 1000);
+    hr.current.style.top = `${y_align + time_gap * 0.02}px`; // Might need change since is approximate
+  }, [timer]);
+
+  useEffect(() => {
+    if (y_align > 846) {
+      // 846 - max height after which time_line will extend the height of the screen
+      hr.current.remove();
+    } else {
+      calendar_body.current.appendChild(hr.current);
+    }
+    return () => {};
+  }, [y_align]);
+
+  const updateTime = () => {
+    dispatch(set_timer(new Date()));
+  };
 
   const getDaysInAmonth = (currentDate) => {
     let i = [];
@@ -97,31 +109,12 @@ export default function CalendarPage(props) {
     setDaysrange(i);
   };
 
-  const updateTime = () => {
-    set_time(new Date());
-  };
-
   const style_selected_time = (time) => {
     // For some reason calling this function every second
     // console.log(time);
   };
 
-  // const handleDayChoose = (date) => {
-  //   dispatch(set_day(date.target.id));
-  //   let prev_date = document.getElementById(
-  //     // Get the previous date
-  //     chosen_days[chosen_days.length - 1]
-  //   );
-  //   // console.log(date.target.id);
-  //   // console.log(chosen_days[chosen_days.length - 1]);
-  //   if (prev_date != null) {
-  //     removeStyle(prev_date.style);
-  //     styleChosenDay(date.target.style);
-  //   }
-  // };
-
   const handleHorizontalScroll = (x) => {
-    // console.log(x);
     weekDaysBodySlider.current.scrollLeft = x;
     weekDaysTopSlider.current.scrollLeft = x;
   };
@@ -131,9 +124,7 @@ export default function CalendarPage(props) {
     weekDaysBodySlider.current.scrollTop = y;
 
     let calculatedMargin =
-      time.getHours() * 72.0588235294 +
-      new Date().getMinutes() * 0.8571428571 -
-      y;
+      timer.getHours() * 72 + new Date().getMinutes() * 1.2 - y;
 
     set_y_align(calculatedMargin);
 
@@ -150,7 +141,7 @@ export default function CalendarPage(props) {
     }
 
     // Calendar slider in the top should be updated as sonn as date chanded asynchronously
-    month == 0
+    month === 0
       ? setDate(
           new Date(
             prevDate.getFullYear() + sign,
@@ -171,6 +162,7 @@ export default function CalendarPage(props) {
     <>
       <Wrapper>
         <CalendarWindow>
+          <div>Check</div>
           <Header>
             <p style={{ marginRight: "20px" }}>Interview Calendar</p>
             <AddIcon src="add-sign.png"></AddIcon>
@@ -214,7 +206,7 @@ export default function CalendarPage(props) {
             </DaysOptionsSliderContentWindow>
           </DaysOptionsSliderWrapper>
 
-          <CalendarBody>
+          <CalendarBody ref={calendar_body}>
             <TimeLineHr ref={hr} />
             <TimePickerSideBar
               ref={weekDaysBodyTimeSlider}
@@ -253,15 +245,7 @@ export default function CalendarPage(props) {
                               date.getMonth(),
                               day,
                               index
-                            ).toString() == value &&
-                            style_selected_time(
-                              new Date(
-                                date.getFullYear(),
-                                date.getMonth(),
-                                day,
-                                index
-                              )
-                            )
+                            ).toString() === value && style_selected_time(value)
                         )}
                         id={
                           new Date(
@@ -289,13 +273,8 @@ export default function CalendarPage(props) {
             </TimePickerBody>
           </CalendarBody>
           <CalendarFooter>
-            <FooterParagraph onClick={() => (hr.current.scrollTop = 250)}>
-              Today
-            </FooterParagraph>
+            <FooterParagraph>Today</FooterParagraph>
             {_is_time_active && <FooterParagraph>Delete</FooterParagraph>}
-            {/* <div>
-              
-            </div> */}
           </CalendarFooter>
         </CalendarWindow>
       </Wrapper>
