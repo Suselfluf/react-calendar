@@ -5,34 +5,53 @@ import { weekDayNames } from "../consts/Consts";
 import { StyleActiveDay } from "../consts/Consts";
 import { removeStyle } from "../consts/Consts";
 import { useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { get_day } from "../redux/models/calendar/calendarSlice";
 
 export default function SliderDay(props) {
   const elem = useRef(null);
+  const container = useRef(null);
 
   const chosen_days = useSelector((state) => state.calendarSlice.date);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    let width_elem = container.current.offsetWidth;
     return () => {
       try {
         let el = document.getElementById(chosen_days);
-        let x_padding = (el.getBoundingClientRect().left - 500).toFixed(0);
-        if (x_padding > 130) {
-          props.handleHorizontalScroll(x_padding);
+        if (el != null) {
+          let make_padding = width_elem * (chosen_days.getDate() - 4);
+          props.handleHorizontalScroll(make_padding);
+          StyleActiveDay(el.style); // Remove styling of chosen day on next or previous month
+        } else {
+          console.log("no");
         }
-
-        StyleActiveDay(el.style);
       } catch (err) {
-        // console.log(err);
+        console.log(err);
       }
     };
   }, []);
+
+  // const handleDayChoose = (date) => {    // Remooving style
+  //   dispatch(set_day(date.target.id));
+  //   let prev_date = document.getElementById(
+  //     // Get the previous date
+  //     chosen_days[chosen_days.length - 1]
+  //   );
+  //   // console.log(date.target.id);
+  //   // console.log(chosen_days[chosen_days.length - 1]);
+  //   if (prev_date != null) {
+  //     removeStyle(prev_date.style);
+  //     styleChosenDay(date.target.style);
+  //   }
+  // };
 
   const [_choseDay, set_choseDay] = useState(elem.current);
 
   return (
     <>
-      <div onClick={() => console.log()}>
+      <div ref={container}>
         <styled.SliderDaysNamesP>
           {
             weekDayNames[

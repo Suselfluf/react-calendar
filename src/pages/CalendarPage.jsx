@@ -37,13 +37,17 @@ export default function CalendarPage(props) {
   const weekDaysBodySlider = useRef(null);
   const weekDaysBodyTimeSlider = useRef(null);
 
+  const mediaQueryDesk = window.matchMedia("(min-width: 740px)");
+  const mediaQueryMobile = window.matchMedia("(max-width: 739px)");
+
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
   const [daysRange, setDaysrange] = useState([]);
   const [y_align, set_y_align] = useState(0);
   const [counter, set_counter] = useState(0);
   const [_is_time_active, set_is_time_active] = useState(false);
-  const [_is_booked, set_is_booked] = useState(false);
+  // const [_is_booked, set_is_booked] = useState(false);
+  const [is_mobile, set_is_mobile] = useState(false);
 
   const initialDate = new Date(
     date.getFullYear(),
@@ -63,27 +67,45 @@ export default function CalendarPage(props) {
 
   const hr = useRef(null);
   const calendar_body = useRef(null);
+  useEffect(() => {
+    const timerId = setInterval(updateTime, 1000);
+    if (!calendar_body.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      // Tracking the state of element's resizing
+      mediaQueryDesk.matches ? set_is_mobile(false) : set_is_mobile(true);
+    });
+    resizeObserver.observe(calendar_body.current);
+
+    return () => {
+      getDaysInAmonth(date);
+      clearInterval(timerId);
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     getDaysInAmonth(date);
   }, [date]);
 
   useEffect(() => {
-    const timerId = setInterval(updateTime, 1000);
-    return () => {
-      getDaysInAmonth(date);
-      clearInterval(timerId);
-    };
-  }, []);
+    is_mobile
+      ? set_y_align(timer.getHours() * 52 + timer.getMinutes() * 0.7)
+      : set_y_align(timer.getHours() * 72 + timer.getMinutes() * 1.2);
+
+    return () => {};
+  }, [is_mobile]);
 
   useEffect(() => {
     set_counter(counter + 1);
-    let time_gap = parseInt((timer.getTime() - initialDate.getTime()) / 1000);
-    hr.current.style.top = `${y_align + time_gap * 0.02}px`; // Might need change since is approximate
+    let time_gap = parseInt((timer.getTime() - initialDate.getTime()) / 1000); // elapsed time in seconds
+    is_mobile
+      ? (hr.current.style.top = `${y_align + time_gap * 0.015}px`)
+      : (hr.current.style.top = `${y_align + time_gap * 0.02}px`);
+    // Might need change since is approximate
   }, [timer]);
 
   useEffect(() => {
-    if (y_align > 846) {
+    if (y_align > calendar_body.current.offsetHeight - 25) {
       // 846 - max height after which time_line will extend the height of the screen
       hr.current.remove();
     } else {
@@ -122,12 +144,14 @@ export default function CalendarPage(props) {
   const handleVerticalScroll = (y) => {
     weekDaysBodyTimeSlider.current.scrollTop = y;
     weekDaysBodySlider.current.scrollTop = y;
-
-    let calculatedMargin =
-      timer.getHours() * 72 + new Date().getMinutes() * 1.2 - y;
-
+    let calculatedMargin = 0;
+    is_mobile
+      ? (calculatedMargin =
+          timer.getHours() * 52 + timer.getMinutes() * 0.7 - y)
+      : (calculatedMargin =
+          timer.getHours() * 72 + timer.getMinutes() * 1.2 - y);
+    // let calculatedMargin = timer.getHours() * 72 + timer.getMinutes() * 1.2 - y;
     set_y_align(calculatedMargin);
-
     hr.current.style.top = `${calculatedMargin}px`;
   };
 
@@ -162,7 +186,6 @@ export default function CalendarPage(props) {
     <>
       <Wrapper>
         <CalendarWindow>
-          <div>Check</div>
           <Header>
             <p style={{ marginRight: "20px" }}>Interview Calendar</p>
             <AddIcon src="add-sign.png"></AddIcon>
