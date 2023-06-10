@@ -19,13 +19,13 @@ export default function SliderDay(props) {
     let width_elem = container.current.offsetWidth;
     return () => {
       try {
-        let el = document.getElementById(chosen_days);
+        let el = document.getElementById(chosen_days[0]);
         if (el != null) {
-          let make_padding = width_elem * (chosen_days.getDate() - 4);
+          let make_padding = width_elem * (chosen_days[0].getDate() - 4);
           props.handleHorizontalScroll(make_padding);
           StyleActiveDay(el.style); // Remove styling of chosen day on next or previous month
         } else {
-          console.log("no");
+          // console.log(elem.current);
         }
       } catch (err) {
         console.log(err);

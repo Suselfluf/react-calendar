@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  date: new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    new Date().getDate()
-  ),
+  date: [
+    new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    ),
+  ],
 };
 
 export const calendarSlice = createSlice({
