@@ -203,7 +203,7 @@ export const SliderDaysNamesP = styled.p`
   }
 `;
 
-export const TimePickerBodyColumn = styled.p`
+export const TimePickerBodyColumn = styled.div`
   font-size: 0.8rem;
 
   @media ${device.mobile} {

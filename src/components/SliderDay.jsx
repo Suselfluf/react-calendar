@@ -19,11 +19,13 @@ export default function SliderDay(props) {
     let width_elem = container.current.offsetWidth;
     return () => {
       try {
-        let el = document.getElementById(chosen_days[0]);
+        let el = document.getElementById(
+          `${chosen_days[0].getFullYear()} ${chosen_days[0].getMonth()} ${chosen_days[0].getDate()}`
+        );
         if (el != null) {
           let make_padding = width_elem * (chosen_days[0].getDate() - 4);
           props.handleHorizontalScroll(make_padding);
-          StyleActiveDay(el.style); // Remove styling of chosen day on next or previous month
+          StyleActiveDay(el.style);
         } else {
           // console.log(elem.current);
         }
@@ -32,20 +34,6 @@ export default function SliderDay(props) {
       }
     };
   }, []);
-
-  // const handleDayChoose = (date) => {    // Remooving style
-  //   dispatch(set_day(date.target.id));
-  //   let prev_date = document.getElementById(
-  //     // Get the previous date
-  //     chosen_days[chosen_days.length - 1]
-  //   );
-  //   // console.log(date.target.id);
-  //   // console.log(chosen_days[chosen_days.length - 1]);
-  //   if (prev_date != null) {
-  //     removeStyle(prev_date.style);
-  //     styleChosenDay(date.target.style);
-  //   }
-  // };
 
   const [_choseDay, set_choseDay] = useState(elem.current);
 
@@ -70,7 +58,15 @@ export default function SliderDay(props) {
             props.date.getFullYear(),
             props.date.getMonth(),
             props.day
-          )}`}
+          ).getFullYear()} ${new Date(
+            props.date.getFullYear(),
+            props.date.getMonth(),
+            props.day
+          ).getMonth()} ${new Date(
+            props.date.getFullYear(),
+            props.date.getMonth(),
+            props.day
+          ).getDate()}`}
           // ref={date_ref}
         >
           {props.day}

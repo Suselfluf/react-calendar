@@ -28,9 +28,11 @@ import {
   TimeLineHr,
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
+import TimePickerCellP from "../components/TimePickerCellP.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
+import { set_prev_reservations } from "../redux/models/reservations/reservationSlice.js";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
@@ -38,7 +40,7 @@ export default function CalendarPage(props) {
   const weekDaysBodyTimeSlider = useRef(null);
 
   const mediaQueryDesk = window.matchMedia("(min-width: 740px)");
-  const mediaQueryMobile = window.matchMedia("(max-width: 739px)");
+  // const mediaQueryMobile = window.matchMedia("(max-width: 739px)");
 
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
@@ -46,7 +48,6 @@ export default function CalendarPage(props) {
   const [y_align, set_y_align] = useState(0);
   const [counter, set_counter] = useState(0);
   const [_is_time_active, set_is_time_active] = useState(false);
-  // const [_is_booked, set_is_booked] = useState(false);
   const [is_mobile, set_is_mobile] = useState(false);
 
   const initialDate = new Date(
@@ -61,6 +62,9 @@ export default function CalendarPage(props) {
   const chosen_days = useSelector((state) => state.calendarSlice.date);
   const reservations = useSelector(
     (state) => state.reservationSlice.reservations
+  );
+  const prev_reservations = useSelector(
+    (state) => state.reservationSlice.prev_reservations_state
   );
   const timer = useSelector((state) => state.timerSlice.timer);
   const dispatch = useDispatch();
@@ -88,6 +92,20 @@ export default function CalendarPage(props) {
   }, [date]);
 
   useEffect(() => {
+    return () => {
+      if (reservations != null) {
+        reservations.forEach((value) => {
+          let el = document.getElementById(value);
+          if (el != null) {
+            el.style.backgroundColor = "#EBECFD";
+            dispatch(set_prev_reservations(value));
+          }
+        });
+      }
+    };
+  }, [daysRange]);
+
+  useEffect(() => {
     is_mobile
       ? set_y_align(timer.getHours() * 52 + timer.getMinutes() * 0.7)
       : set_y_align(timer.getHours() * 72 + timer.getMinutes() * 1.2);
@@ -105,7 +123,7 @@ export default function CalendarPage(props) {
   }, [timer]);
 
   useEffect(() => {
-    if (y_align > calendar_body.current.offsetHeight - 25) {
+    if (y_align > calendar_body.current.offsetHeight - 25 || y_align < 0) {
       // 846 - max height after which time_line will extend the height of the screen
       hr.current.remove();
     } else {
@@ -131,11 +149,6 @@ export default function CalendarPage(props) {
     setDaysrange(i);
   };
 
-  const style_selected_time = (time) => {
-    // For some reason calling this function every second
-    // console.log(time);
-  };
-
   const handleHorizontalScroll = (x) => {
     weekDaysBodySlider.current.scrollLeft = x;
     weekDaysTopSlider.current.scrollLeft = x;
@@ -150,19 +163,36 @@ export default function CalendarPage(props) {
           timer.getHours() * 52 + timer.getMinutes() * 0.7 - y)
       : (calculatedMargin =
           timer.getHours() * 72 + timer.getMinutes() * 1.2 - y);
-    // let calculatedMargin = timer.getHours() * 72 + timer.getMinutes() * 1.2 - y;
+
     set_y_align(calculatedMargin);
+
+    /***
+    ##
+    for some reason after some time scroll change time_line postition above the one which are with respect with time elapsed
+    ##***/
     hr.current.style.top = `${calculatedMargin}px`;
   };
 
   const handleMonthChange = (prevDate, sign) => {
+    // Prevmonth conditional styling remooval
     let prev_date = document.getElementById(
       // Get the previous date
-      chosen_days[chosen_days.length - 1]
+      `${chosen_days[
+        chosen_days.length - 1
+      ].getFullYear()} ${chosen_days[0].getMonth()} ${chosen_days[0].getDate()}`
     );
     if (prev_date != null) {
       removeStyle(prev_date.style);
+    } else {
     }
+    reservations.forEach((value) => {
+      let prev_res_el = document.getElementById(value);
+      if (prev_res_el != null) {
+        removeStyle(prev_res_el.style);
+      }
+    });
+    // console.log(prev_reservations);
+    // console.log(reservations);
 
     // Calendar slider in the top should be updated as sonn as date chanded asynchronously
     month === 0
@@ -259,36 +289,12 @@ export default function CalendarPage(props) {
                 <div key={day}>
                   <TimePickerBodyColumn>
                     {timeRange.map((value, index) => (
-                      <TimePickerCell
+                      <TimePickerCellP
+                        index={index}
+                        day={day}
+                        date={date}
                         key={index}
-                        {...reservations.map(
-                          (value, n) =>
-                            new Date(
-                              date.getFullYear(),
-                              date.getMonth(),
-                              day,
-                              index
-                            ).toString() === value && style_selected_time(value)
-                        )}
-                        id={
-                          new Date(
-                            date.getFullYear(),
-                            date.getMonth(),
-                            day,
-                            index
-                          )
-                        }
-                        onClick={() =>
-                          console.log(
-                            new Date(
-                              date.getFullYear(),
-                              date.getMonth(),
-                              day,
-                              index
-                            )
-                          )
-                        }
-                      ></TimePickerCell>
+                      />
                     ))}
                   </TimePickerBodyColumn>
                 </div>
