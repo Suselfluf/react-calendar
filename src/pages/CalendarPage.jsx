@@ -32,7 +32,11 @@ import TimePickerCellP from "../components/TimePickerCellP.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
-import { set_prev_reservations } from "../redux/models/reservations/reservationSlice.js";
+import {
+  add_reservation,
+  remove_reservation,
+} from "../redux/models/reservations/reservationSlice.js";
+import PopUp_reservations from "../components/Pop-ups/PopUp_reservations.jsx";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
@@ -48,7 +52,9 @@ export default function CalendarPage(props) {
   const [y_align, set_y_align] = useState(0);
   const [counter, set_counter] = useState(0);
   const [_is_time_active, set_is_time_active] = useState(false);
+  const [active_time, set_active_time] = useState(null);
   const [is_mobile, set_is_mobile] = useState(false);
+  const [is_popup_shown, set_is_popup_shown] = useState(false);
 
   const initialDate = new Date(
     date.getFullYear(),
@@ -63,9 +69,7 @@ export default function CalendarPage(props) {
   const reservations = useSelector(
     (state) => state.reservationSlice.reservations
   );
-  const prev_reservations = useSelector(
-    (state) => state.reservationSlice.prev_reservations_state
-  );
+
   const timer = useSelector((state) => state.timerSlice.timer);
   const dispatch = useDispatch();
 
@@ -98,7 +102,7 @@ export default function CalendarPage(props) {
           let el = document.getElementById(value);
           if (el != null) {
             el.style.backgroundColor = "#EBECFD";
-            dispatch(set_prev_reservations(value));
+            // dispatch(set_prev_reservations(value));
           }
         });
       }
@@ -134,6 +138,17 @@ export default function CalendarPage(props) {
 
   const updateTime = () => {
     dispatch(set_timer(new Date()));
+  };
+
+  const navigateToToday = () => {
+    // console.log(timer);
+    setDate(timer);
+    reservations.forEach((value) => {
+      let prev_res_el = document.getElementById(value);
+      if (prev_res_el != null) {
+        removeStyle(prev_res_el.style);
+      }
+    });
   };
 
   const getDaysInAmonth = (currentDate) => {
@@ -183,7 +198,6 @@ export default function CalendarPage(props) {
     );
     if (prev_date != null) {
       removeStyle(prev_date.style);
-    } else {
     }
     reservations.forEach((value) => {
       let prev_res_el = document.getElementById(value);
@@ -191,10 +205,7 @@ export default function CalendarPage(props) {
         removeStyle(prev_res_el.style);
       }
     });
-    // console.log(prev_reservations);
-    // console.log(reservations);
 
-    // Calendar slider in the top should be updated as sonn as date chanded asynchronously
     month === 0
       ? setDate(
           new Date(
@@ -212,13 +223,52 @@ export default function CalendarPage(props) {
         );
   };
 
+  const handleDayTimeChoose = (elem, value) => {
+    // console.log(elem.target.style.backgroundColor);
+    if (elem.target.style.backgroundColor) {
+      elem.target.style.backgroundColor = "#B4B7FA";
+      set_is_time_active(true);
+      set_active_time(value);
+    }
+
+    // dispatch(add_reservation(value));
+  };
+
+  const removeActiveTime = () => {
+    document.getElementById(active_time).style.backgroundColor = null;
+    dispatch(remove_reservation(active_time));
+  };
+
+  const handlePopUpSubmit = (new_event) => {
+    set_is_popup_shown(false);
+    let el = document.getElementById(new_event);
+    if (el != null) {
+      el.style.backgroundColor = "#EBECFD";
+    }
+  };
+
+  const handlePopUpClose = () => {
+    set_is_popup_shown(false);
+  };
+
   return (
     <>
       <Wrapper>
+        {is_popup_shown && (
+          <PopUp_reservations
+            handlePopUpSubmit={handlePopUpSubmit}
+            handlePopUpClose={handlePopUpClose}
+          />
+        )}
         <CalendarWindow>
           <Header>
             <p style={{ marginRight: "20px" }}>Interview Calendar</p>
-            <AddIcon src="add-sign.png"></AddIcon>
+            <AddIcon
+              src="add-sign.png"
+              onClick={() => {
+                set_is_popup_shown(true);
+              }}
+            ></AddIcon>
           </Header>
           <DaysOptionsSliderWrapper>
             <DaysOptionsSliderContentWindow>
@@ -294,6 +344,7 @@ export default function CalendarPage(props) {
                         day={day}
                         date={date}
                         key={index}
+                        handleDayTimeChoose={handleDayTimeChoose}
                       />
                     ))}
                   </TimePickerBodyColumn>
@@ -302,8 +353,18 @@ export default function CalendarPage(props) {
             </TimePickerBody>
           </CalendarBody>
           <CalendarFooter>
-            <FooterParagraph>Today</FooterParagraph>
-            {_is_time_active && <FooterParagraph>Delete</FooterParagraph>}
+            <FooterParagraph
+              onClick={() => {
+                navigateToToday();
+              }}
+            >
+              Today
+            </FooterParagraph>
+            {_is_time_active && (
+              <FooterParagraph onClick={removeActiveTime}>
+                Delete
+              </FooterParagraph>
+            )}
           </CalendarFooter>
         </CalendarWindow>
       </Wrapper>

@@ -18,6 +18,7 @@ export const CalendarWindow = styled.div`
   display: block;
   border: 1px solid;
   background-color: #ffffff;
+  z-index: 998;
   @media ${device.mobile} {
     width: 740px;
   }
@@ -280,5 +281,74 @@ export const TimeLineHr = styled.hr`
   @media ${device.mobileSmall} {
     top: -5px;
     width: 85%;
+  }
+`;
+
+export const PopUpBackground = styled.div`
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  @media ${device.mobileSmall} {
+  }
+`;
+
+export const PopUpWrapperDiv = styled.div`
+  display: grid;
+  position: absolute;
+  border-radius: 15px;
+  background-color: #e6e6e7;
+  width: 550px;
+  color: black;
+  z-index: 1000;
+  opacity: 100%;
+  @media ${device.mobileSmall} {
+    width: 85%;
+  }
+`;
+
+export const PopUpContentHeaderP = styled.p`
+  font-size: 1.6rem;
+  margin-bottom: 1%;
+  text-align: center;
+  font-weight: bold;
+  @media ${device.mobileSmall} {
+    font-size: 1.2rem;
+    padding: 2% 0 0 1%;
+  }
+`;
+
+export const PopUpContentSubHeaderP = styled.p`
+  margin: 0;
+  font-size: 1.3rem;
+`;
+
+export const PopUpContentInputForm = styled.input`
+  margin: 4% 8% 3% 8%;
+  caret-color: #3478f6;
+  height: 25px;
+  font-size: 1.3rem;
+  color: #3478f6;
+`;
+
+export const PopUpContentButtonsDiv = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
+export const PopUpContentButtons = styled.div`
+  border-top: 1px solid #69697b;
+  border-${(props) => props.position}: 0.5px solid #69697b;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3478F6;
+  @media ${device.mobile} {
+    font-size: 1.7rem;
   }
 `;

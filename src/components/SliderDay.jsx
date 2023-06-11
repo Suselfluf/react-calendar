@@ -13,7 +13,7 @@ export default function SliderDay(props) {
   const container = useRef(null);
 
   const chosen_days = useSelector((state) => state.calendarSlice.date);
-  const dispatch = useDispatch();
+  const mediaQueryDesk = window.matchMedia("(min-width: 740px)");
 
   useEffect(() => {
     let width_elem = container.current.offsetWidth;
@@ -25,7 +25,9 @@ export default function SliderDay(props) {
         if (el != null) {
           let make_padding = width_elem * (chosen_days[0].getDate() - 4);
           props.handleHorizontalScroll(make_padding);
-          StyleActiveDay(el.style);
+          mediaQueryDesk.matches
+            ? StyleActiveDay(el.style, "desktop")
+            : StyleActiveDay(el.style, "mobile");
         } else {
           // console.log(elem.current);
         }

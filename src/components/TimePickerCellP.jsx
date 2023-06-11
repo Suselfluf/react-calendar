@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { TimePickerCell } from "../styles/calendar.styled";
-import { useSelector } from "react-redux";
 
 export default function TimePickerCellP(props) {
-  const reservations = useSelector(
-    (state) => state.reservationSlice.reservations
-  );
+  const cell = useRef(null);
 
-  // const [id, set_id] = useState("");
+  // useEffect(() => {
+  //   return () => {
+  //     console.log(cell.current.style);
+  //     cell.current.style.backgroundColor =
+  //   };
+  // }, []);
+
   const id = `${new Date(
     props.date.getFullYear(),
     props.date.getMonth(),
@@ -29,12 +32,14 @@ export default function TimePickerCellP(props) {
     props.day,
     props.index
   ).getHours()}:00:00`;
-
   return (
     <>
-      <TimePickerCell key={props.index} id={id} onClick={() => alert(id)}>
-        {}
-      </TimePickerCell>
+      <TimePickerCell
+        key={props.index}
+        ref={cell}
+        id={id}
+        onClick={(elem) => props.handleDayTimeChoose(elem, id)}
+      />
     </>
   );
 }
