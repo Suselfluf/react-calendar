@@ -2,11 +2,12 @@
 
 # How to use:
 
-To run app you need to run following comand in terminal of cloned folder: **npm run start**
+To run app you need to run following comand in terminal of cloned folder: `npm run start`
 
-## Interview events
+### Interview events
 
-In this version of calendar, the events with interviews contained with a static array stored in "src/redux/models/reservations/reservationSlice.js" file.
+In this version of calendar, the events with interviews contained with a static array stored in `src/redux/models/reservations/reservationSlice.js` file.
+
 As an alternative, it is possible to add AsynkThunk which will initialize API requests taking values that are stored in the DB.
 The Input field takes the value of the YYYY MM DD HH or YYY M D H format if the month/day/hour has 1 digit. As instance - the 5th month or the 4th hour.
 
