@@ -1,5 +1,17 @@
 # interview-calendar
 
+# Как использовать:
+
+Чтобы запустить react приложение: **npm run start**
+
+## Интерьвю ивенты
+
+В данной версии интервью ивенты являются статичным массивом хранящимся в "src/redux/models/reservations/reservationSlice.js"
+Как альтернативу возможно дописать AsynkThunk который будет инницализировать API запросы принимая значения, которые хранятся в DB.
+Input поле принимаеет значение формата YYYY MM DD HH или YYY M D H если в месяце/дне/часах 1 цифра например 5й месяц или 4й час.
+
+# Текст задания:
+
 ## Веб приложение с недельным календарем
 
 Нужно реализовать статичное веб приложение (SPA) используя create-react-app, React, styled-components и выложить его на Heroku.
@@ -31,5 +43,3 @@ https://medium.com/styled-components/styled-components-getting-started-c9818acbc
 
 Heroku:
 https://blog.heroku.com/deploying-react-with-zero-configuration
-
-# react-calendar
