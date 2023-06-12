@@ -5,25 +5,34 @@ import { weekDayNames } from "../consts/Consts";
 import { StyleActiveDay } from "../consts/Consts";
 import { removeStyle } from "../consts/Consts";
 import { useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { get_day } from "../redux/models/calendar/calendarSlice";
 
 export default function SliderDay(props) {
   const elem = useRef(null);
+  const container = useRef(null);
 
   const chosen_days = useSelector((state) => state.calendarSlice.date);
+  const mediaQueryDesk = window.matchMedia("(min-width: 740px)");
 
   useEffect(() => {
+    let width_elem = container.current.offsetWidth;
     return () => {
       try {
-        let el = document.getElementById(chosen_days);
-        let x_padding = (el.getBoundingClientRect().left - 500).toFixed(0);
-        if (x_padding > 130) {
-          props.handleHorizontalScroll(x_padding);
+        let el = document.getElementById(
+          `${chosen_days[0].getFullYear()} ${chosen_days[0].getMonth()} ${chosen_days[0].getDate()}`
+        );
+        if (el != null) {
+          let make_padding = width_elem * (chosen_days[0].getDate() - 4);
+          props.handleHorizontalScroll(make_padding);
+          mediaQueryDesk.matches
+            ? StyleActiveDay(el.style, "desktop")
+            : StyleActiveDay(el.style, "mobile");
+        } else {
+          // console.log(elem.current);
         }
-
-        StyleActiveDay(el.style);
       } catch (err) {
-        // console.log(err);
+        console.log(err);
       }
     };
   }, []);
@@ -32,7 +41,7 @@ export default function SliderDay(props) {
 
   return (
     <>
-      <div onClick={() => console.log()}>
+      <div ref={container}>
         <styled.SliderDaysNamesP>
           {
             weekDayNames[
@@ -51,7 +60,15 @@ export default function SliderDay(props) {
             props.date.getFullYear(),
             props.date.getMonth(),
             props.day
-          )}`}
+          ).getFullYear()} ${new Date(
+            props.date.getFullYear(),
+            props.date.getMonth(),
+            props.day
+          ).getMonth()} ${new Date(
+            props.date.getFullYear(),
+            props.date.getMonth(),
+            props.day
+          ).getDate()}`}
           // ref={date_ref}
         >
           {props.day}

@@ -1,11 +1,5 @@
 import React, { useEffect, useState, useRef, useReducer } from "react";
-import {
-  weekDayNames,
-  monthRange,
-  hourseRange,
-  timeRange,
-  StyleActiveDay,
-} from "../consts/Consts.jsx";
+import { monthRange, timeRange } from "../consts/Consts.jsx";
 // import styles from "../styles/calendarPage.module.css";
 import "../styles/calendarPage.module.css";
 import {
@@ -34,47 +28,129 @@ import {
   TimeLineHr,
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
+import TimePickerCellP from "../components/TimePickerCellP.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { set_day } from "../redux/models/calendar/calendarSlice.js";
+import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
+import {
+  add_reservation,
+  remove_reservation,
+} from "../redux/models/reservations/reservationSlice.js";
+import PopUp_reservations from "../components/Pop-ups/PopUp_reservations.jsx";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
   const weekDaysBodySlider = useRef(null);
   const weekDaysBodyTimeSlider = useRef(null);
+
+  const mediaQueryDesk = window.matchMedia("(min-width: 740px)");
+  // const mediaQueryMobile = window.matchMedia("(max-width: 739px)");
+
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
   const [daysRange, setDaysrange] = useState([]);
-
-  const [time, set_time] = useState(new Date());
   const [y_align, set_y_align] = useState(0);
-
-  const reservations = [
-    "Sun Jun 04 2023 03:00:00 GMT+0300 (Moscow Standard Time)",
-  ];
-
+  const [counter, set_counter] = useState(0);
   const [_is_time_active, set_is_time_active] = useState(false);
-  const [_is_booked, set_is_booked] = useState(false);
+  const [active_time, set_active_time] = useState(null);
+  const [is_mobile, set_is_mobile] = useState(false);
+  const [is_popup_shown, set_is_popup_shown] = useState(false);
+
+  const initialDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds()
+  );
 
   const chosen_days = useSelector((state) => state.calendarSlice.date);
+  const reservations = useSelector(
+    (state) => state.reservationSlice.reservations
+  );
+
+  const timer = useSelector((state) => state.timerSlice.timer);
+  const dispatch = useDispatch();
 
   const hr = useRef(null);
+  const calendar_body = useRef(null);
+  useEffect(() => {
+    const timerId = setInterval(updateTime, 1000);
+    if (!calendar_body.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      // Tracking the state of element's resizing
+      mediaQueryDesk.matches ? set_is_mobile(false) : set_is_mobile(true);
+    });
+    resizeObserver.observe(calendar_body.current);
+
+    return () => {
+      getDaysInAmonth(date);
+      clearInterval(timerId);
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     getDaysInAmonth(date);
   }, [date]);
 
   useEffect(() => {
-    const timerId = setInterval(updateTime, 1000);
     return () => {
-      getDaysInAmonth(date);
-      clearInterval(timerId);
+      if (reservations != null) {
+        reservations.forEach((value) => {
+          let el = document.getElementById(value);
+          if (el != null) {
+            el.style.backgroundColor = "#EBECFD";
+            // dispatch(set_prev_reservations(value));
+          }
+        });
+      }
     };
-  }, []);
+  }, [daysRange]);
 
   useEffect(() => {
-    hr.current.style.top = `${y_align + new Date().getMinutes() / 10}px`; // Might need change since is approximate
-  }, [time]);
+    is_mobile
+      ? set_y_align(timer.getHours() * 52 + timer.getMinutes() * 0.7)
+      : set_y_align(timer.getHours() * 72 + timer.getMinutes() * 1.2);
+
+    return () => {};
+  }, [is_mobile]);
+
+  useEffect(() => {
+    set_counter(counter + 1);
+    let time_gap = parseInt((timer.getTime() - initialDate.getTime()) / 1000); // elapsed time in seconds
+    is_mobile
+      ? (hr.current.style.top = `${y_align + time_gap * 0.015}px`)
+      : (hr.current.style.top = `${y_align + time_gap * 0.02}px`);
+    // Might need change since is approximate
+  }, [timer]);
+
+  useEffect(() => {
+    if (y_align > calendar_body.current.offsetHeight - 25 || y_align < 0) {
+      // 846 - max height after which time_line will extend the height of the screen
+      hr.current.remove();
+    } else {
+      calendar_body.current.appendChild(hr.current);
+    }
+    return () => {};
+  }, [y_align]);
+
+  const updateTime = () => {
+    dispatch(set_timer(new Date()));
+  };
+
+  const navigateToToday = () => {
+    setDate(timer);
+    reservations.forEach((value) => {
+      let prev_res_el = document.getElementById(value);
+      if (prev_res_el != null) {
+        removeStyle(prev_res_el.style);
+      }
+    });
+
+    update_styling();
+  };
 
   const getDaysInAmonth = (currentDate) => {
     let i = [];
@@ -89,26 +165,7 @@ export default function CalendarPage(props) {
     setDaysrange(i);
   };
 
-  const updateTime = () => {
-    set_time(new Date());
-  };
-
-  // const handleDayChoose = (date) => {
-  //   dispatch(set_day(date.target.id));
-  //   let prev_date = document.getElementById(
-  //     // Get the previous date
-  //     chosen_days[chosen_days.length - 1]
-  //   );
-  //   // console.log(date.target.id);
-  //   // console.log(chosen_days[chosen_days.length - 1]);
-  //   if (prev_date != null) {
-  //     removeStyle(prev_date.style);
-  //     styleChosenDay(date.target.style);
-  //   }
-  // };
-
   const handleHorizontalScroll = (x) => {
-    // console.log(x);
     weekDaysBodySlider.current.scrollLeft = x;
     weekDaysTopSlider.current.scrollLeft = x;
   };
@@ -116,28 +173,47 @@ export default function CalendarPage(props) {
   const handleVerticalScroll = (y) => {
     weekDaysBodyTimeSlider.current.scrollTop = y;
     weekDaysBodySlider.current.scrollTop = y;
-
-    let calculatedMargin =
-      time.getHours() * 72.0588235294 +
-      new Date().getMinutes() * 0.8571428571 -
-      y;
+    let calculatedMargin = 0;
+    is_mobile
+      ? (calculatedMargin =
+          timer.getHours() * 52 + timer.getMinutes() * 0.7 - y)
+      : (calculatedMargin =
+          timer.getHours() * 72 + timer.getMinutes() * 1.2 - y);
 
     set_y_align(calculatedMargin);
 
+    /***
+    ##
+    for some reason after some time scroll change time_line postition above the one which are with respect with time elapsed
+    ##***/
     hr.current.style.top = `${calculatedMargin}px`;
   };
 
-  const handleMonthChange = (prevDate, sign) => {
+  const update_styling = () => {
     let prev_date = document.getElementById(
       // Get the previous date
-      chosen_days[chosen_days.length - 1]
+      `${chosen_days[
+        chosen_days.length - 1
+      ].getFullYear()} ${chosen_days[0].getMonth()} ${chosen_days[0].getDate()}`
     );
+
     if (prev_date != null) {
       removeStyle(prev_date.style);
     }
 
-    // Calendar slider in the top should be updated as sonn as date chanded asynchronously
-    month == 0
+    reservations.forEach((value) => {
+      let prev_res_el = document.getElementById(value);
+      if (prev_res_el != null) {
+        removeStyle(prev_res_el.style);
+      }
+    });
+  };
+
+  const handleMonthChange = (prevDate, sign) => {
+    // Prevmonth conditional styling remooval
+    update_styling();
+
+    month === 0
       ? setDate(
           new Date(
             prevDate.getFullYear() + sign,
@@ -152,19 +228,55 @@ export default function CalendarPage(props) {
             prevDate.getDate()
           )
         );
-    // return getDaysInAmonth(date);
+  };
+
+  const handleDayTimeChoose = (elem, value) => {
+    if (elem.target.style.backgroundColor) {
+      elem.target.style.backgroundColor = "#B4B7FA";
+      set_is_time_active(true);
+      set_active_time(value);
+    }
+
+    // dispatch(add_reservation(value));
+  };
+
+  const removeActiveTime = () => {
+    document.getElementById(active_time).style.backgroundColor = null;
+    dispatch(remove_reservation(active_time));
+    set_is_time_active(!_is_time_active);
+  };
+
+  const handlePopUpSubmit = (new_event) => {
+    set_is_popup_shown(false);
+    let el = document.getElementById(new_event);
+    if (el != null) {
+      el.style.backgroundColor = "#EBECFD";
+    }
+  };
+
+  const handlePopUpClose = () => {
+    set_is_popup_shown(false);
   };
 
   return (
     <>
-      <Wrapper onClick={() => console.log(new Date().getHours())}>
+      <Wrapper>
+        {is_popup_shown && (
+          <PopUp_reservations
+            handlePopUpSubmit={handlePopUpSubmit}
+            handlePopUpClose={handlePopUpClose}
+          />
+        )}
         <CalendarWindow>
           <Header>
             <p style={{ marginRight: "20px" }}>Interview Calendar</p>
-            <AddIcon src="add-sign.png"></AddIcon>
-            {/* <img  width={35} alt="" /> */}
+            <AddIcon
+              src="add-sign.png"
+              onClick={() => {
+                set_is_popup_shown(true);
+              }}
+            ></AddIcon>
           </Header>
-          {/* <ActiveSliderDate>Example</ActiveSliderDate> */}
           <DaysOptionsSliderWrapper>
             <DaysOptionsSliderContentWindow>
               <WeekDaysTitlesLine
@@ -204,7 +316,7 @@ export default function CalendarPage(props) {
             </DaysOptionsSliderContentWindow>
           </DaysOptionsSliderWrapper>
 
-          <CalendarBody>
+          <CalendarBody ref={calendar_body}>
             <TimeLineHr ref={hr} />
             <TimePickerSideBar
               ref={weekDaysBodyTimeSlider}
@@ -234,28 +346,13 @@ export default function CalendarPage(props) {
                 <div key={day}>
                   <TimePickerBodyColumn>
                     {timeRange.map((value, index) => (
-                      <TimePickerCell
+                      <TimePickerCellP
+                        index={index}
+                        day={day}
+                        date={date}
                         key={index}
-                        // {...reservations.map(
-                        //   (value, n) =>
-                        //     new Date(
-                        //       date.getFullYear(),
-                        //       date.getMonth(),
-                        //       day,
-                        //       index
-                        //     ).toString() == value && console.log("is")
-                        // )}
-                        onClick={() =>
-                          console.log(
-                            new Date(
-                              date.getFullYear(),
-                              date.getMonth(),
-                              day,
-                              index
-                            )
-                          )
-                        }
-                      ></TimePickerCell>
+                        handleDayTimeChoose={handleDayTimeChoose}
+                      />
                     ))}
                   </TimePickerBodyColumn>
                 </div>
@@ -263,13 +360,18 @@ export default function CalendarPage(props) {
             </TimePickerBody>
           </CalendarBody>
           <CalendarFooter>
-            <FooterParagraph onClick={() => (hr.current.scrollTop = 250)}>
+            <FooterParagraph
+              onClick={() => {
+                navigateToToday();
+              }}
+            >
               Today
             </FooterParagraph>
-            {_is_time_active && <FooterParagraph>Delete</FooterParagraph>}
-            {/* <div>
-              
-            </div> */}
+            {_is_time_active && (
+              <FooterParagraph onClick={removeActiveTime}>
+                Delete
+              </FooterParagraph>
+            )}
           </CalendarFooter>
         </CalendarWindow>
       </Wrapper>
