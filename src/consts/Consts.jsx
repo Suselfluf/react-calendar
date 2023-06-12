@@ -28,13 +28,22 @@ export const monthRange = [
 
 export const weekDayNames = ["M", "T", "W", "T", "F", "S", "S"];
 
-export const StyleActiveDay = (day) => {
-  day.backgroundColor = "red";
-  day.borderRadius = "50px";
-  day.width = "28px";
-  day.marginLeft = "35%";
-  day.textAlign = "center";
-  day.color = "white";
+export const StyleActiveDay = (day, res) => {
+  if (res === "mobile") {
+    day.backgroundColor = "red";
+    day.borderRadius = "50px";
+    day.width = "25px";
+    day.marginLeft = "25%";
+    day.textAlign = "center";
+    day.color = "white";
+  } else {
+    day.backgroundColor = "red";
+    day.borderRadius = "50px";
+    day.width = "28px";
+    day.marginLeft = "35%";
+    day.textAlign = "center";
+    day.color = "white";
+  }
 };
 
 export const removeStyle = (day) => {
