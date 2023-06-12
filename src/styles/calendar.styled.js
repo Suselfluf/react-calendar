@@ -224,7 +224,6 @@ export const SliderDatesP = styled.p`
     margin: 0;
     height: 25px;
   }
-  // background-color: ${(props) => (props.active ? "red" : "#f6f6f6;")};
 `;
 
 export const TimePickerCell = styled.p`
@@ -332,7 +331,16 @@ export const PopUpContentInputForm = styled.input`
   caret-color: #3478f6;
   height: 25px;
   font-size: 1.3rem;
+  font-weight: semi-bold;
   color: #3478f6;
+  border: 1px solid #aaaaae;
+  box-shadow: 0 0 1px #aaaaae;
+  &:focus {
+    outline: none;
+    border: 1px solid #aaaaae;
+    box-shadow: 0 0 1px #aaaaae;
+    // box-shadow: 0px 0px 2px red;
+  }
 `;
 
 export const PopUpContentButtonsDiv = styled.div`
@@ -351,4 +359,10 @@ export const PopUpContentButtons = styled.div`
   @media ${device.mobile} {
     font-size: 1.7rem;
   }
+`;
+
+export const PopUpValidationMessageP = styled.p`
+  margin: 1% 0 1% 0;
+  font-size: 1rem;
+  color: #eb473d;
 `;

@@ -141,7 +141,6 @@ export default function CalendarPage(props) {
   };
 
   const navigateToToday = () => {
-    // console.log(timer);
     setDate(timer);
     reservations.forEach((value) => {
       let prev_res_el = document.getElementById(value);
@@ -149,6 +148,8 @@ export default function CalendarPage(props) {
         removeStyle(prev_res_el.style);
       }
     });
+
+    update_styling();
   };
 
   const getDaysInAmonth = (currentDate) => {
@@ -188,23 +189,29 @@ export default function CalendarPage(props) {
     hr.current.style.top = `${calculatedMargin}px`;
   };
 
-  const handleMonthChange = (prevDate, sign) => {
-    // Prevmonth conditional styling remooval
+  const update_styling = () => {
     let prev_date = document.getElementById(
       // Get the previous date
       `${chosen_days[
         chosen_days.length - 1
       ].getFullYear()} ${chosen_days[0].getMonth()} ${chosen_days[0].getDate()}`
     );
+
     if (prev_date != null) {
       removeStyle(prev_date.style);
     }
+
     reservations.forEach((value) => {
       let prev_res_el = document.getElementById(value);
       if (prev_res_el != null) {
         removeStyle(prev_res_el.style);
       }
     });
+  };
+
+  const handleMonthChange = (prevDate, sign) => {
+    // Prevmonth conditional styling remooval
+    update_styling();
 
     month === 0
       ? setDate(
@@ -224,7 +231,6 @@ export default function CalendarPage(props) {
   };
 
   const handleDayTimeChoose = (elem, value) => {
-    // console.log(elem.target.style.backgroundColor);
     if (elem.target.style.backgroundColor) {
       elem.target.style.backgroundColor = "#B4B7FA";
       set_is_time_active(true);
@@ -237,6 +243,7 @@ export default function CalendarPage(props) {
   const removeActiveTime = () => {
     document.getElementById(active_time).style.backgroundColor = null;
     dispatch(remove_reservation(active_time));
+    set_is_time_active(!_is_time_active);
   };
 
   const handlePopUpSubmit = (new_event) => {
