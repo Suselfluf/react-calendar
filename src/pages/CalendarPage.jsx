@@ -38,7 +38,7 @@ export default function CalendarPage(props) {
 
   const mediaQueryDesk = window.matchMedia("(min-width: 740px)");
 
-  const [month, setMonth] = useState(new Date().getMonth());
+  const month = new Date().getMonth();
   const [date, setDate] = useState(new Date());
   const [daysRange, setDaysrange] = useState([]);
   const [y_align, set_y_align] = useState(0);
@@ -104,7 +104,7 @@ export default function CalendarPage(props) {
         });
       }
     };
-  }, [daysRange]);
+  }, [daysRange, reservations]);
 
   useEffect(() => {
     is_mobile

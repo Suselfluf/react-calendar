@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useRef } from "react";
 import { TimePickerCell } from "../styles/calendar.styled";
 
 export default function TimePickerCellP(props) {

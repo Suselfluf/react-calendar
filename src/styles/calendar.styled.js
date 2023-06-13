@@ -45,6 +45,7 @@ export const Header = styled.div`
 `;
 
 export const AddIcon = styled.img`
+  cursor: pointer;
   @media ${device.mobile} {
     width: 30px;
     padding-left: 60%;
@@ -256,6 +257,7 @@ export const CalendarFooter = styled.div`
 `;
 
 export const FooterParagraph = styled.p`
+  cursor: pointer;
   color: #eb473d;
   font-size: 1.2rem;
   @media ${device.mobile} {
