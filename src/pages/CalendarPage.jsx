@@ -106,7 +106,7 @@ export default function CalendarPage(props) {
           let el = document.getElementById(value);
           if (el != null) {
             el.style.backgroundColor = "#EBECFD";
-            // dispatch(set_prev_reservations(value));
+            el.style.cursor = "pointer";
           }
         });
       }
@@ -143,8 +143,8 @@ export default function CalendarPage(props) {
   useEffect(() => {
     return () => {
       if (weekDaysBodySlider != null && weekDaysTopSlider != null) {
-        weekDaysBodySlider.current.scrollLeft -= difference / 5;
-        weekDaysTopSlider.current.scrollLeft -= difference / 5;
+        weekDaysBodySlider.current.scrollLeft -= difference / 10;
+        weekDaysTopSlider.current.scrollLeft -= difference / 10;
       }
     };
   }, [difference]);
@@ -298,6 +298,7 @@ export default function CalendarPage(props) {
           />
         )}
         <CalendarWindow>
+          {clientX} {initial} {difference}
           <Header>
             <p style={{ marginRight: "20px" }}>Interview Calendar</p>
             <AddIcon
@@ -316,7 +317,11 @@ export default function CalendarPage(props) {
                 }
               >
                 <WeekDaysTitlesTable>
-                  <DateSlider>
+                  <DateSlider
+                    onMouseMove={handleMouseMoove}
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                  >
                     {daysRange.map((day) => (
                       <SliderDay
                         day={day}
