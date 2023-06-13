@@ -122,7 +122,7 @@ export const CalendarBody = styled.div`
   position: relative;
   grid-template-columns: 13% 87%;
   @media ${device.mobileSmall} {
-    height: 65vh;
+    height: 60vh;
     padding-right: 10px;
   }
 `;
@@ -250,6 +250,9 @@ export const CalendarFooter = styled.div`
   align-items: center;
   border-top: 1px solid #ebebeb;
   gap: 10vw;
+  @media ${device.mobileSmall} {
+    height: 8vh;
+  }
 `;
 
 export const FooterParagraph = styled.p`
@@ -341,7 +344,6 @@ export const PopUpContentInputForm = styled.input`
     outline: none;
     border: 1px solid #aaaaae;
     box-shadow: 0 0 1px #aaaaae;
-    // box-shadow: 0px 0px 2px red;
   }
 `;
 

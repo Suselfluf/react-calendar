@@ -17,13 +17,10 @@ export default function PopUp_reservations(props) {
     set_date_value(result);
   };
   useEffect(() => {
-    // const timerId = setInterval(set_is_error(false), 5000);
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
     return () => {
       console.log();
-      // clearInterval(timerId);
-      sleep(5000).then(() => set_is_error(false));
+      sleep(5000).then(() => set_is_error(false)); // Error message timings 5s
     };
   }, [is_error]);
 
@@ -33,7 +30,7 @@ export default function PopUp_reservations(props) {
   };
 
   const handleSubmitForm = () => {
-    let formated_date = `${date_value}:00:00`;
+    let formated_date = `${date_value}:00:00`; // Change with respect to new format of date reservations
 
     let val = has_duplicates(reservations, formated_date);
 

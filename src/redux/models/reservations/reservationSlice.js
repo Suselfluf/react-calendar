@@ -7,7 +7,7 @@ const initialState = {
     "2023 5 11 3:00:00",
     "2023 5 13 0:00:00",
     "2023 6 13 1:00:00",
-  ],
+  ], // YYYY MM DD HH:MM:SS
 };
 
 export const reservationSlicer = createSlice({

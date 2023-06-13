@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef, useReducer } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { monthRange, timeRange } from "../consts/Consts.jsx";
-// import styles from "../styles/calendarPage.module.css";
 import "../styles/calendarPage.module.css";
 import {
   Wrapper,
@@ -17,14 +16,11 @@ import {
   AddIcon,
   WeekDaysTitlesTable,
   DateSlider,
-  SliderDaysNamesP,
   TimePickerBody,
   TimePickerSideBar,
   TimePickerSideBarP,
-  TimePickerCell,
   TimePickerBodyColumn,
   FooterParagraph,
-  ActiveSliderDate,
   TimeLineHr,
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
@@ -32,10 +28,7 @@ import TimePickerCellP from "../components/TimePickerCellP.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
-import {
-  add_reservation,
-  remove_reservation,
-} from "../redux/models/reservations/reservationSlice.js";
+import { remove_reservation } from "../redux/models/reservations/reservationSlice.js";
 import PopUp_reservations from "../components/Pop-ups/PopUp_reservations.jsx";
 
 export default function CalendarPage(props) {
@@ -44,7 +37,6 @@ export default function CalendarPage(props) {
   const weekDaysBodyTimeSlider = useRef(null);
 
   const mediaQueryDesk = window.matchMedia("(min-width: 740px)");
-  // const mediaQueryMobile = window.matchMedia("(max-width: 739px)");
 
   const [month, setMonth] = useState(new Date().getMonth());
   const [date, setDate] = useState(new Date());
@@ -73,12 +65,13 @@ export default function CalendarPage(props) {
   const reservations = useSelector(
     (state) => state.reservationSlice.reservations
   );
-
   const timer = useSelector((state) => state.timerSlice.timer);
+
   const dispatch = useDispatch();
 
   const hr = useRef(null);
   const calendar_body = useRef(null);
+
   useEffect(() => {
     const timerId = setInterval(updateTime, 1000);
     if (!calendar_body.current) return;
@@ -117,7 +110,6 @@ export default function CalendarPage(props) {
     is_mobile
       ? set_y_align(timer.getHours() * 52 + timer.getMinutes() * 0.7)
       : set_y_align(timer.getHours() * 72 + timer.getMinutes() * 1.2);
-
     return () => {};
   }, [is_mobile]);
 
@@ -215,6 +207,7 @@ export default function CalendarPage(props) {
     ##
     for some reason after some time scroll change time_line postition above the one which are with respect with time elapsed
     ##***/
+
     hr.current.style.top = `${calculatedMargin}px`;
   };
 
@@ -265,8 +258,6 @@ export default function CalendarPage(props) {
       set_is_time_active(true);
       set_active_time(value);
     }
-
-    // dispatch(add_reservation(value));
   };
 
   const removeActiveTime = () => {
