@@ -188,7 +188,6 @@ export default function CalendarPage(props) {
   };
 
   const handleMouseMoove = (e) => {
-    console.log(e.clientX);
     set_clientX(e.clientX);
     if (is_pressed) {
       set_difference(clientX - initial);
@@ -298,7 +297,6 @@ export default function CalendarPage(props) {
           />
         )}
         <CalendarWindow>
-          {clientX} {initial} {difference}
           <Header>
             <p style={{ marginRight: "20px" }}>Interview Calendar</p>
             <AddIcon
