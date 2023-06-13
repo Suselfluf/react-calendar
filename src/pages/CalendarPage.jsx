@@ -55,6 +55,10 @@ export default function CalendarPage(props) {
   const [active_time, set_active_time] = useState(null);
   const [is_mobile, set_is_mobile] = useState(false);
   const [is_popup_shown, set_is_popup_shown] = useState(false);
+  const [clientX, set_clientX] = useState(0);
+  const [is_pressed, set_is_pressed] = useState(false);
+  const [difference, set_difference] = useState(0);
+  const [initial, set_initial] = useState(0);
 
   const initialDate = new Date(
     date.getFullYear(),
@@ -136,6 +140,15 @@ export default function CalendarPage(props) {
     return () => {};
   }, [y_align]);
 
+  useEffect(() => {
+    return () => {
+      if (weekDaysBodySlider != null && weekDaysTopSlider != null) {
+        weekDaysBodySlider.current.scrollLeft -= difference / 5;
+        weekDaysTopSlider.current.scrollLeft -= difference / 5;
+      }
+    };
+  }, [difference]);
+
   const updateTime = () => {
     dispatch(set_timer(new Date()));
   };
@@ -163,6 +176,23 @@ export default function CalendarPage(props) {
       i.push(index);
     }
     setDaysrange(i);
+  };
+
+  const handleMouseDown = (e) => {
+    set_is_pressed(true);
+    set_initial(e.clientX);
+  };
+
+  const handleMouseUp = (e) => {
+    set_is_pressed(false);
+  };
+
+  const handleMouseMoove = (e) => {
+    console.log(e.clientX);
+    set_clientX(e.clientX);
+    if (is_pressed) {
+      set_difference(clientX - initial);
+    }
   };
 
   const handleHorizontalScroll = (x) => {
@@ -315,7 +345,6 @@ export default function CalendarPage(props) {
               </YearMonthChoiceLine>
             </DaysOptionsSliderContentWindow>
           </DaysOptionsSliderWrapper>
-
           <CalendarBody ref={calendar_body}>
             <TimeLineHr ref={hr} />
             <TimePickerSideBar
@@ -341,6 +370,9 @@ export default function CalendarPage(props) {
                 handleHorizontalScroll(event.currentTarget.scrollLeft),
                 handleVerticalScroll(event.currentTarget.scrollTop)
               )}
+              onMouseMove={handleMouseMoove}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
             >
               {daysRange.map((day) => (
                 <div key={day}>
