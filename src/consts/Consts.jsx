@@ -36,12 +36,14 @@ export const StyleActiveDay = (day, res) => {
     day.marginLeft = "25%";
     day.textAlign = "center";
     day.color = "white";
+    // day.cursor = "pointer";
   } else {
     day.backgroundColor = "red";
     day.borderRadius = "50px";
     day.width = "28px";
     day.marginLeft = "35%";
     day.textAlign = "center";
+    // day.cursor = "pointer";
     day.color = "white";
   }
 };
@@ -53,6 +55,7 @@ export const removeStyle = (day) => {
   day.removeProperty("margin-left");
   day.removeProperty("text-align");
   day.removeProperty("color");
+  day.removeProperty("cursor");
 };
 
 export const timeRange = [

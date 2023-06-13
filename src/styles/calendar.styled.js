@@ -108,6 +108,7 @@ export const DateSlider = styled.div`
     display: flex;
     position: relative;
     alignitems: center;
+    cursor: grabbing;
   }
   @media ${device.mobileSmall} {
     display: flex;
@@ -128,6 +129,7 @@ export const CalendarBody = styled.div`
 
 export const TimePickerBody = styled.div`
   overflow-x: scroll;
+  cursor: grabbing;
   &::-webkit-scrollbar {
     width: 0;
   }

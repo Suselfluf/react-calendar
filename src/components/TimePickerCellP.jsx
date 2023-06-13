@@ -4,13 +4,6 @@ import { TimePickerCell } from "../styles/calendar.styled";
 export default function TimePickerCellP(props) {
   const cell = useRef(null);
 
-  // useEffect(() => {
-  //   return () => {
-  //     console.log(cell.current.style);
-  //     cell.current.style.backgroundColor =
-  //   };
-  // }, []);
-
   const id = `${new Date(
     props.date.getFullYear(),
     props.date.getMonth(),
