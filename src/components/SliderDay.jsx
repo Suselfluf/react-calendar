@@ -3,11 +3,9 @@ import { useState } from "react";
 import * as styled from "../styles/calendar.styled";
 import { weekDayNames } from "../consts/Consts";
 import { StyleActiveDay } from "../consts/Consts";
-import { removeStyle } from "../consts/Consts";
 import { useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { get_day } from "../redux/models/calendar/calendarSlice";
-
+import { useSelector } from "react-redux";
+import { AnimatePresence, motion } from "framer-motion";
 export default function SliderDay(props) {
   const elem = useRef(null);
   const container = useRef(null);
@@ -37,43 +35,49 @@ export default function SliderDay(props) {
     };
   }, []);
 
+  useEffect(() => {
+    return () => {};
+  }, [elem]);
+
   const [_choseDay, set_choseDay] = useState(elem.current);
 
   return (
     <>
-      <div ref={container}>
-        <styled.SliderDaysNamesP>
-          {
-            weekDayNames[
-              new Date(
-                props.date.getFullYear(),
-                props.date.getMonth(),
-                props.day - 1 // To make day title correct
-              ).getDay()
-            ]
-          }
-        </styled.SliderDaysNamesP>
-        <styled.SliderDatesP
-          ref={elem}
-          key={props.day}
-          id={`${new Date(
-            props.date.getFullYear(),
-            props.date.getMonth(),
-            props.day
-          ).getFullYear()} ${new Date(
-            props.date.getFullYear(),
-            props.date.getMonth(),
-            props.day
-          ).getMonth()} ${new Date(
-            props.date.getFullYear(),
-            props.date.getMonth(),
-            props.day
-          ).getDate()}`}
-          // ref={date_ref}
-        >
-          {props.day}
-        </styled.SliderDatesP>
-      </div>
+      <AnimatePresence initial={false}>
+        <motion.div ref={container}>
+          <styled.SliderDaysNamesP>
+            {
+              weekDayNames[
+                new Date(
+                  props.date.getFullYear(),
+                  props.date.getMonth(),
+                  props.day - 1 // To make day title correct
+                ).getDay()
+              ]
+            }
+          </styled.SliderDaysNamesP>
+          <styled.SliderDatesP
+            ref={elem}
+            key={props.day}
+            id={`${new Date(
+              props.date.getFullYear(),
+              props.date.getMonth(),
+              props.day
+            ).getFullYear()} ${new Date(
+              props.date.getFullYear(),
+              props.date.getMonth(),
+              props.day
+            ).getMonth()} ${new Date(
+              props.date.getFullYear(),
+              props.date.getMonth(),
+              props.day
+            ).getDate()}`}
+            // ref={date_ref}
+          >
+            {props.day}
+          </styled.SliderDatesP>
+        </motion.div>
+      </AnimatePresence>
     </>
   );
 }

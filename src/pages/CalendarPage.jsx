@@ -22,6 +22,7 @@ import {
   TimePickerBodyColumn,
   FooterParagraph,
   TimeLineHr,
+  IconContainer,
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
 import TimePickerCellP from "../components/TimePickerCellP.jsx";
@@ -30,6 +31,7 @@ import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
 import { remove_reservation } from "../redux/models/reservations/reservationSlice.js";
 import PopUp_reservations from "../components/Pop-ups/PopUp_reservations.jsx";
+import { AnimatePresence } from "framer-motion";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
@@ -134,7 +136,7 @@ export default function CalendarPage(props) {
 
   useEffect(() => {
     return () => {
-      if (weekDaysBodySlider != null && weekDaysTopSlider != null) {
+      if (weekDaysBodySlider.current != null && weekDaysTopSlider != null) {
         weekDaysBodySlider.current.scrollLeft -= difference / 10;
         weekDaysTopSlider.current.scrollLeft -= difference / 10;
       }
@@ -281,21 +283,34 @@ export default function CalendarPage(props) {
   return (
     <>
       <Wrapper>
-        {is_popup_shown && (
-          <PopUp_reservations
-            handlePopUpSubmit={handlePopUpSubmit}
-            handlePopUpClose={handlePopUpClose}
-          />
-        )}
-        <CalendarWindow>
+        <AnimatePresence initial={false}>
+          {is_popup_shown && (
+            <PopUp_reservations
+              handlePopUpSubmit={handlePopUpSubmit}
+              handlePopUpClose={handlePopUpClose}
+            />
+          )}
+        </AnimatePresence>
+
+        <CalendarWindow
+          initial={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          animate={{ opacity: 1 }}
+        >
           <Header>
-            <p style={{ marginRight: "20px" }}>Interview Calendar</p>
-            <AddIcon
-              src="add-sign.png"
-              onClick={() => {
-                set_is_popup_shown(true);
-              }}
-            ></AddIcon>
+            <p style={{ marginRight: "20px", marginLeft: "10%" }}>
+              Interview Calendar
+            </p>
+            <IconContainer>
+              <AddIcon
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 1 }}
+                src="add-sign.png"
+                onClick={() => {
+                  set_is_popup_shown(true);
+                }}
+              ></AddIcon>
+            </IconContainer>
           </Header>
           <DaysOptionsSliderWrapper>
             <DaysOptionsSliderContentWindow>

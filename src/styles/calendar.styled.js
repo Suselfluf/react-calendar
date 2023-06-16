@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { device } from "../consts/Consts";
+import { motion } from "framer-motion";
 
 export const Wrapper = styled.div`
   font-size: 2.5em;
@@ -12,7 +13,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const CalendarWindow = styled.div`
+export const CalendarWindow = styled(motion.div)`
   color: #030303;
   margin: auto;
   display: block;
@@ -30,10 +31,9 @@ export const Header = styled.div`
   height: 148px;
   display: grid;
   align-items: center;
-  justify-items: start;
+  justify-items: center;
   @media ${device.mobile} {
     grid-template-columns: 2fr 1fr;
-    margin: 0 0 0 5%;
   }
   @media ${device.mobileSmall} {
     grid-template-columns: 70% 30%;
@@ -43,11 +43,11 @@ export const Header = styled.div`
     width: auto;
   }
 `;
-
-export const AddIcon = styled.img`
+export const IconContainer = styled(motion.div)``;
+export const AddIcon = styled(motion.img)`
+  cursor: pointer;
   @media ${device.mobile} {
     width: 30px;
-    padding-left: 60%;
   }
   @media ${device.mobileSmall} {
     width: 20px;
@@ -288,7 +288,7 @@ export const TimeLineHr = styled.hr`
   }
 `;
 
-export const PopUpBackground = styled.div`
+export const PopUpBackground = styled(motion.d)`
   display: flex;
   position: fixed;
   width: 100%;
@@ -301,7 +301,7 @@ export const PopUpBackground = styled.div`
   }
 `;
 
-export const PopUpWrapperDiv = styled.div`
+export const PopUpWrapperDiv = styled(motion.div)`
   display: grid;
   position: absolute;
   border-radius: 15px;
@@ -312,10 +312,12 @@ export const PopUpWrapperDiv = styled.div`
   opacity: 100%;
   @media ${device.mobileSmall} {
     width: 85%;
+    margin-bottom: 70px;
   }
 `;
 
 export const PopUpContentHeaderP = styled.p`
+  cursor: default;
   font-size: 1.6rem;
   margin-bottom: 1%;
   text-align: center;
@@ -327,6 +329,7 @@ export const PopUpContentHeaderP = styled.p`
 `;
 
 export const PopUpContentSubHeaderP = styled.p`
+  cursor: default;
   margin: 0;
   font-size: 1.3rem;
 `;
@@ -352,8 +355,9 @@ export const PopUpContentButtonsDiv = styled.div`
   grid-template-columns: 1fr 1fr;
 `;
 
-export const PopUpContentButtons = styled.div`
+export const PopUpContentButtons = styled(motion.div)`
   border-top: 1px solid #69697b;
+  cursor: pointer;
   border-${(props) => props.position}: 0.5px solid #69697b;
   height: 45px;
   display: flex;
@@ -363,6 +367,10 @@ export const PopUpContentButtons = styled.div`
   @media ${device.mobile} {
     font-size: 1.7rem;
   }
+`;
+
+export const ButtonTextP = styled(motion.p)`
+  width: 100%;
 `;
 
 export const PopUpValidationMessageP = styled.p`
