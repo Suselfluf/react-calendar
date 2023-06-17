@@ -282,7 +282,7 @@ export default function CalendarPage(props) {
 
   return (
     <>
-      <Wrapper>
+      <Wrapper scale={0.5}>
         <AnimatePresence initial={false}>
           {is_popup_shown && (
             <PopUp_reservations
@@ -338,19 +338,25 @@ export default function CalendarPage(props) {
                 </WeekDaysTitlesTable>
               </WeekDaysTitlesLine>
               <YearMonthChoiceLine>
-                <MonthSliderIcon
-                  src="less-icon.png"
-                  onClick={(e) => handleMonthChange(date, -1)}
-                  style={{ justifySelf: "start" }}
-                ></MonthSliderIcon>
+                <IconContainer justify={"start"}>
+                  <MonthSliderIcon
+                    whileHover={{ scale: 1.4 }}
+                    whileTap={{ scale: 0.8 }}
+                    src="less-icon.png"
+                    onClick={(e) => handleMonthChange(date, -1)}
+                  ></MonthSliderIcon>
+                </IconContainer>
                 <MonthYearChoice>
                   {monthRange[date.getMonth()]} {date.getFullYear()}{" "}
                 </MonthYearChoice>
-                <MonthSliderIcon
-                  src="more-icon.png"
-                  onClick={(e) => handleMonthChange(date, 1)}
-                  style={{ justifySelf: "end" }}
-                ></MonthSliderIcon>
+                <IconContainer justify={"end"}>
+                  <MonthSliderIcon
+                    whileHover={{ scale: 1.4 }}
+                    whileTap={{ scale: 0.8 }}
+                    src="more-icon.png"
+                    onClick={(e) => handleMonthChange(date, 1)}
+                  ></MonthSliderIcon>
+                </IconContainer>
               </YearMonthChoiceLine>
             </DaysOptionsSliderContentWindow>
           </DaysOptionsSliderWrapper>

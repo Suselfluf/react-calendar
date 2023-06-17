@@ -43,7 +43,9 @@ export const Header = styled.div`
     width: auto;
   }
 `;
-export const IconContainer = styled(motion.div)``;
+export const IconContainer = styled(motion.div)`
+  justify-self: ${(props) => props.justify};
+`;
 export const AddIcon = styled(motion.img)`
   cursor: pointer;
   @media ${device.mobile} {
@@ -187,7 +189,8 @@ export const YearMonthChoiceLine = styled.div`
   }
 `;
 
-export const MonthSliderIcon = styled.img`
+export const MonthSliderIcon = styled(motion.img)`
+  cursor: pointer;
   width: 30px;
   @media ${device.mobileSmall} {
     width: 20px;
