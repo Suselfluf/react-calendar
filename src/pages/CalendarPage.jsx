@@ -22,6 +22,7 @@ import {
   TimePickerBodyColumn,
   FooterParagraph,
   TimeLineHr,
+  HeaderP,
   IconContainer,
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
@@ -282,7 +283,7 @@ export default function CalendarPage(props) {
 
   return (
     <>
-      <Wrapper scale={0.5}>
+      <Wrapper>
         <AnimatePresence initial={false}>
           {is_popup_shown && (
             <PopUp_reservations
@@ -298,10 +299,11 @@ export default function CalendarPage(props) {
           animate={{ opacity: 1 }}
         >
           <Header>
-            <p style={{ marginRight: "20px", marginLeft: "10%" }}>
-              Interview Calendar
-            </p>
-            <IconContainer>
+            <HeaderP>Interview Calendar</HeaderP>
+            <IconContainer
+              justify={"end"}
+              right={`${is_mobile ? "5vh" : "8vh"}`}
+            >
               <AddIcon
                 whileHover={{ scale: 1.3 }}
                 whileTap={{ scale: 1 }}
@@ -320,22 +322,20 @@ export default function CalendarPage(props) {
                   handleHorizontalScroll(event.currentTarget.scrollLeft)
                 }
               >
-                <WeekDaysTitlesTable>
-                  <DateSlider
-                    onMouseMove={handleMouseMoove}
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                  >
-                    {daysRange.map((day) => (
-                      <SliderDay
-                        day={day}
-                        date={date}
-                        key={day}
-                        handleHorizontalScroll={handleHorizontalScroll}
-                      ></SliderDay>
-                    ))}
-                  </DateSlider>
-                </WeekDaysTitlesTable>
+                <DateSlider
+                  onMouseMove={handleMouseMoove}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                >
+                  {daysRange.map((day) => (
+                    <SliderDay
+                      day={day}
+                      date={date}
+                      key={day}
+                      handleHorizontalScroll={handleHorizontalScroll}
+                    ></SliderDay>
+                  ))}
+                </DateSlider>
               </WeekDaysTitlesLine>
               <YearMonthChoiceLine>
                 <IconContainer justify={"start"}>
@@ -347,7 +347,7 @@ export default function CalendarPage(props) {
                   ></MonthSliderIcon>
                 </IconContainer>
                 <MonthYearChoice>
-                  {monthRange[date.getMonth()]} {date.getFullYear()}{" "}
+                  {monthRange[date.getMonth()]} {date.getFullYear(1)}{" "}
                 </MonthYearChoice>
                 <IconContainer justify={"end"}>
                   <MonthSliderIcon

@@ -35,16 +35,12 @@ export default function SliderDay(props) {
     };
   }, []);
 
-  useEffect(() => {
-    return () => {};
-  }, [elem]);
-
   const [_choseDay, set_choseDay] = useState(elem.current);
 
   return (
     <>
       <AnimatePresence initial={false}>
-        <motion.div ref={container}>
+        <styled.SliderSingleDayDiv ref={container}>
           <styled.SliderDaysNamesP>
             {
               weekDayNames[
@@ -76,7 +72,7 @@ export default function SliderDay(props) {
           >
             {props.day}
           </styled.SliderDatesP>
-        </motion.div>
+        </styled.SliderSingleDayDiv>
       </AnimatePresence>
     </>
   );

@@ -21,14 +21,14 @@ export const CalendarWindow = styled(motion.div)`
   background-color: #ffffff;
   z-index: 998;
   @media ${device.mobile} {
-    width: 740px;
+    width: 610px;
   }
   @media ${device.mobileSmall} {
   }
 `;
 
 export const Header = styled.div`
-  height: 148px;
+  height: 88px;
   display: grid;
   align-items: center;
   justify-items: center;
@@ -43,8 +43,18 @@ export const Header = styled.div`
     width: auto;
   }
 `;
+
+export const HeaderP = styled.p`
+  margin: 0 20px 0 10%;
+
+  @media ${device.mobile} {
+    // grid-template-columns: 2fr 1fr;
+    font-size: 2rem;
+  }
+`;
 export const IconContainer = styled(motion.div)`
   justify-self: ${(props) => props.justify};
+  margin-right: ${(props) => props.right};
 `;
 export const AddIcon = styled(motion.img)`
   cursor: pointer;
@@ -57,6 +67,7 @@ export const AddIcon = styled(motion.img)`
 `;
 
 export const MonthYearChoice = styled.p`
+  margin: 0;
   @media ${device.mobile} {
     font-size: 1.1rem;
   }
@@ -67,10 +78,10 @@ export const MonthYearChoice = styled.p`
 
 export const DaysOptionsSliderWrapper = styled.div`
   background-color: #f6f6f6;
-  height: 168px;
+  width: 99.7%;
   border: 1px solid #ebebeb;
   @media ${device.mobile} {
-    width: 738px;
+    height: 125px;
   }
   @media ${device.mobileSmall} {
     height: 98px;
@@ -79,6 +90,8 @@ export const DaysOptionsSliderWrapper = styled.div`
 
 export const DaysOptionsSliderContentWindow = styled.div`
   margin-left: 13%;
+  display: grid;
+  grid-template-columns: 1fr;
   @media ${device.mobileSmall} {
   }
 `;
@@ -86,6 +99,7 @@ export const DaysOptionsSliderContentWindow = styled.div`
 export const WeekDaysTitlesLine = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
+  scroll-snap-type: x mandotary;
   width: 95%;
 
   &::-webkit-scrollbar {
@@ -95,18 +109,17 @@ export const WeekDaysTitlesLine = styled.div`
 
   @media ${device.mobile} {
     font-size: 1.2rem;
-    height: 93px;
+    height: 75px;
   }
   @media ${device.mobileSmall} {
     height: 63px;
-    width: 95%;
+    width: 92%;
   }
 `;
 
-export const WeekDaysTitlesTable = styled.div``;
-
 export const DateSlider = styled.div`
   @media ${device.mobile} {
+    margin-top: 2vh;
     display: flex;
     position: relative;
     alignitems: center;
@@ -119,7 +132,7 @@ export const DateSlider = styled.div`
 `;
 
 export const CalendarBody = styled.div`
-  height: 905px;
+  height: 500px;
   display: grid;
   position: relative;
   grid-template-columns: 13% 87%;
@@ -131,6 +144,8 @@ export const CalendarBody = styled.div`
 
 export const TimePickerBody = styled.div`
   overflow-x: scroll;
+  // scroll-snap-align: center;
+  // scroll-snap-type: x mandotary
   cursor: grabbing;
   &::-webkit-scrollbar {
     width: 0;
@@ -181,7 +196,7 @@ export const YearMonthChoiceLine = styled.div`
   align-items: center;
   justify-items: center;
   @media ${device.mobile} {
-    margin: 5px 1.9rem 0 2rem;
+    margin-right: 4vw;
   }
   @media ${device.mobileSmall} {
     margin-right: 5%;
@@ -198,10 +213,11 @@ export const MonthSliderIcon = styled(motion.img)`
 `;
 
 export const SliderDaysNamesP = styled.p`
-  font-size: 1rem;
+  margin: 0;
+  font-size: 0.8rem;
   font-weight: bold;
   @media ${device.mobile} {
-    width: 92px;
+    width: 76px; // 92
   }
   @media ${device.mobileSmall} {
     font-size: 0.7rem;
@@ -213,7 +229,7 @@ export const TimePickerBodyColumn = styled.div`
   font-size: 0.8rem;
 
   @media ${device.mobile} {
-    width: 92px;
+    width: 76px;
     margin: 0;
   }
   @media ${device.mobileSmall} {
@@ -223,7 +239,8 @@ export const TimePickerBodyColumn = styled.div`
 `;
 
 export const SliderDatesP = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  margin: 0;
   @media ${device.mobileSmall} {
     font-size: 1.1rem;
     margin: 0;
@@ -231,12 +248,23 @@ export const SliderDatesP = styled.p`
   }
 `;
 
+export const SliderSingleDayDiv = styled(motion.div)`
+  display: grid;
+  grid-template-columns: 1fr;
+  scroll-snap-align: center;
+  grid-row-gap: 10px;
+  @media ${device.mobileSmall} {
+    margin-top: 1vh;
+  }
+`;
+
 export const TimePickerCell = styled.p`
   margin: 0;
   border: #e6e6e6 1px solid;
   border-left: 0px;
+  // scroll-snap-align: center;
   @media ${device.mobile} {
-    width: 92px;
+    width: 76px; // 92
     height: 70px;
   }
   @media ${device.mobileSmall} {
@@ -283,11 +311,11 @@ export const TimeLineHr = styled.hr`
   background: #eb473d;
   position: absolute;
   margin: 10px 0 0 13%;
-  width: 642px;
+  width: 529px;
   overflow: hidden;
   @media ${device.mobileSmall} {
     top: -5px;
-    width: 85%;
+    width: 86.5%;
   }
 `;
 
