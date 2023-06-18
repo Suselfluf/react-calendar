@@ -29,12 +29,6 @@ export default function PopUp_reservations(props) {
     };
   }, [is_error, is_minimal_error]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     sleep(5000).then(() => set_is_minimal_error(false));
-  //   };
-  // }, [is_minimal_error]);
-
   const handleKeyEvent = (key) => {
     key.code === "Enter" && handleSubmitForm();
     key.code === "Escape" && props.handlePopUpClose();
@@ -57,13 +51,8 @@ export default function PopUp_reservations(props) {
 
   return (
     <>
-      <styled.PopUpBackground
-      // initial={{ opacity: 0 }}
-      // transition={{ duration: 0.1 }}
-      // animate={{ opacity: 1 }}
-      >
+      <styled.PopUpBackground>
         <styled.PopUpWrapperDiv
-          variants={dropIn}
           initial={{ y: "-100vh", opacity: 0 }}
           animate={{
             y: 0,
@@ -134,23 +123,3 @@ export default function PopUp_reservations(props) {
     </>
   );
 }
-
-const dropIn = {
-  hiden: {
-    y: "-100vh",
-    opacity: 0,
-  },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.4,
-      type: "spring",
-      damping: 100,
-      stifness: 500,
-    },
-  },
-  exit: {
-    y: "100vh",
-  },
-};

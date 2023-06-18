@@ -1,13 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const date = new Date();
+
 const initialState = {
   // Can be changed to thunk api get request
   reservations: [
-    "2023 5 11 0:00:00",
-    "2023 5 11 3:00:00",
-    "2023 5 13 0:00:00",
-    "2023 6 13 1:00:00",
+    `${date.getFullYear()} ${date.getMonth()} ${date.getDate()} 2:00:00`,
+    `${date.getFullYear()} ${date.getMonth()} ${date.getDate() + 1} 5:00:00`,
+    `${date.getFullYear()} ${date.getMonth()} ${date.getDate() - 1} 4:00:00`,
+    `${date.getFullYear()} ${date.getMonth()} ${date.getDate() - 1} 6:00:00`,
+    `${date.getFullYear()} ${date.getMonth()} ${date.getDate() - 1} 9:00:00`,
+    `${date.getFullYear()} ${date.getMonth()} ${date.getDate()} 8:00:00`,
+    `${date.getFullYear()} ${date.getMonth()} ${date.getDate()} 10:00:00`,
   ], // YYYY MM DD HH:MM:SS
+  remooving_reservations: [],
 };
 
 export const reservationSlicer = createSlice({
@@ -27,11 +33,18 @@ export const reservationSlicer = createSlice({
         (item) => item !== removal
       );
     },
+    add_to_remooval: (state, action) => {
+      state.remooving_reservations.push(action.payload);
+    },
   },
 });
 
-export const { set_prev_reservations, add_reservation, remove_reservation } =
-  reservationSlicer.actions;
+export const {
+  set_prev_reservations,
+  add_reservation,
+  remove_reservation,
+  add_to_remooval,
+} = reservationSlicer.actions;
 
 export const has_duplicates = (state, date) => {
   let duplicate = state.filter((item) => item === date);

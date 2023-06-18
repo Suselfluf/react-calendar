@@ -100,7 +100,6 @@ export const WeekDaysTitlesLine = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
   scroll-snap-type: x mandotary;
-  width: 95%;
 
   &::-webkit-scrollbar {
     width: 0;
@@ -110,6 +109,7 @@ export const WeekDaysTitlesLine = styled.div`
   @media ${device.mobile} {
     font-size: 1.2rem;
     height: 75px;
+    width: 88%;
   }
   @media ${device.mobileSmall} {
     height: 63px;
@@ -196,7 +196,7 @@ export const YearMonthChoiceLine = styled.div`
   align-items: center;
   justify-items: center;
   @media ${device.mobile} {
-    margin-right: 4vw;
+    margin-right: 12%;
   }
   @media ${device.mobileSmall} {
     margin-right: 5%;
@@ -258,11 +258,10 @@ export const SliderSingleDayDiv = styled(motion.div)`
   }
 `;
 
-export const TimePickerCell = styled.p`
+export const TimePickerCell = styled(motion.p)`
   margin: 0;
   border: #e6e6e6 1px solid;
   border-left: 0px;
-  // scroll-snap-align: center;
   @media ${device.mobile} {
     width: 76px; // 92
     height: 70px;
@@ -286,13 +285,17 @@ export const CalendarFooter = styled.div`
   }
 `;
 
-export const FooterParagraph = styled.p`
+export const FooterParagraph = styled.div`
   color: #eb473d;
   font-size: 1.2rem;
   @media ${device.mobile} {
   }
   @media ${device.mobileSmall} {
   }
+`;
+
+export const FooterParagraphP = styled(motion.p)`
+  cursor: pointer;
 `;
 
 export const ActiveSliderDate = styled.p`

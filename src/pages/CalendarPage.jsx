@@ -21,6 +21,7 @@ import {
   TimePickerSideBarP,
   TimePickerBodyColumn,
   FooterParagraph,
+  FooterParagraphP,
   TimeLineHr,
   HeaderP,
   IconContainer,
@@ -30,7 +31,10 @@ import TimePickerCellP from "../components/TimePickerCellP.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
-import { remove_reservation } from "../redux/models/reservations/reservationSlice.js";
+import {
+  remove_reservation,
+  add_to_remooval,
+} from "../redux/models/reservations/reservationSlice.js";
 import PopUp_reservations from "../components/Pop-ups/PopUp_reservations.jsx";
 import { AnimatePresence } from "framer-motion";
 
@@ -47,7 +51,6 @@ export default function CalendarPage(props) {
   const [y_align, set_y_align] = useState(0);
   const [counter, set_counter] = useState(0);
   const [_is_time_active, set_is_time_active] = useState(false);
-  const [active_time, set_active_time] = useState(null);
   const [is_mobile, set_is_mobile] = useState(false);
   const [is_popup_shown, set_is_popup_shown] = useState(false);
   const [clientX, set_clientX] = useState(0);
@@ -67,6 +70,9 @@ export default function CalendarPage(props) {
   const chosen_days = useSelector((state) => state.calendarSlice.date);
   const reservations = useSelector(
     (state) => state.reservationSlice.reservations
+  );
+  const remooving_interviews = useSelector(
+    (state) => state.reservationSlice.remooving_reservations
   );
   const timer = useSelector((state) => state.timerSlice.timer);
 
@@ -259,13 +265,15 @@ export default function CalendarPage(props) {
     if (elem.target.style.backgroundColor) {
       elem.target.style.backgroundColor = "#B4B7FA";
       set_is_time_active(true);
-      set_active_time(value);
+      dispatch(add_to_remooval(value));
     }
   };
 
   const removeActiveTime = () => {
-    document.getElementById(active_time).style.backgroundColor = null;
-    dispatch(remove_reservation(active_time));
+    remooving_interviews.map((time) => {
+      dispatch(remove_reservation(time));
+      document.getElementById(time).style.backgroundColor = null;
+    });
     set_is_time_active(!_is_time_active);
   };
 
@@ -412,13 +420,29 @@ export default function CalendarPage(props) {
                 navigateToToday();
               }}
             >
-              Today
+              <FooterParagraphP whileHover={{ scale: 1.2 }}>
+                Today
+              </FooterParagraphP>
             </FooterParagraph>
-            {_is_time_active && (
-              <FooterParagraph onClick={removeActiveTime}>
-                Delete
-              </FooterParagraph>
-            )}
+            <AnimatePresence>
+              {_is_time_active && (
+                <FooterParagraph onClick={removeActiveTime}>
+                  <FooterParagraphP
+                    whileHover={{ scale: 1.2 }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                    }}
+                    exit={{ scale: 0 }}
+                  >
+                    Delete
+                  </FooterParagraphP>
+                </FooterParagraph>
+              )}
+            </AnimatePresence>
           </CalendarFooter>
         </CalendarWindow>
       </Wrapper>
