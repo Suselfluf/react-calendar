@@ -21,15 +21,23 @@ import {
   TimePickerSideBarP,
   TimePickerBodyColumn,
   FooterParagraph,
+  FooterParagraphP,
   TimeLineHr,
+  HeaderP,
+  IconContainer,
 } from "../styles/calendar.styled.js";
 import SliderDay from "../components/SliderDay.jsx";
 import TimePickerCellP from "../components/TimePickerCellP.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { set_timer } from "../redux/models/timerSlice/timerSlice.jsx";
 import { removeStyle } from "../consts/Consts.jsx";
-import { remove_reservation } from "../redux/models/reservations/reservationSlice.js";
+import {
+  remove_reservation,
+  add_to_remooval,
+  remove_from_remooval,
+} from "../redux/models/reservations/reservationSlice.js";
 import PopUp_reservations from "../components/Pop-ups/PopUp_reservations.jsx";
+import { AnimatePresence, motionValue, useMotionValue } from "framer-motion";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
@@ -44,13 +52,16 @@ export default function CalendarPage(props) {
   const [y_align, set_y_align] = useState(0);
   const [counter, set_counter] = useState(0);
   const [_is_time_active, set_is_time_active] = useState(false);
-  const [active_time, set_active_time] = useState(null);
   const [is_mobile, set_is_mobile] = useState(false);
   const [is_popup_shown, set_is_popup_shown] = useState(false);
   const [clientX, set_clientX] = useState(0);
   const [is_pressed, set_is_pressed] = useState(false);
   const [difference, set_difference] = useState(0);
   const [initial, set_initial] = useState(0);
+  const [month_title_x_pos, set_month_title_x_pos] = useState(120);
+  const [month_title_x_neg, set_month_title_x_neg] = useState(-120);
+  const [month_animate_x, set_month_animate_x] = useState(0);
+  const [scale_date, set_scale_date] = useState(false);
 
   const initialDate = new Date(
     date.getFullYear(),
@@ -64,6 +75,9 @@ export default function CalendarPage(props) {
   const chosen_days = useSelector((state) => state.calendarSlice.date);
   const reservations = useSelector(
     (state) => state.reservationSlice.reservations
+  );
+  const remooving_interviews = useSelector(
+    (state) => state.reservationSlice.remooving_reservations
   );
   const timer = useSelector((state) => state.timerSlice.timer);
 
@@ -134,7 +148,7 @@ export default function CalendarPage(props) {
 
   useEffect(() => {
     return () => {
-      if (weekDaysBodySlider != null && weekDaysTopSlider != null) {
+      if (weekDaysBodySlider.current != null && weekDaysTopSlider != null) {
         weekDaysBodySlider.current.scrollLeft -= difference / 10;
         weekDaysTopSlider.current.scrollLeft -= difference / 10;
       }
@@ -146,6 +160,7 @@ export default function CalendarPage(props) {
   };
 
   const navigateToToday = () => {
+    set_scale_date(!scale_date);
     setDate(timer);
     reservations.forEach((value) => {
       let prev_res_el = document.getElementById(value);
@@ -202,12 +217,6 @@ export default function CalendarPage(props) {
           timer.getHours() * 72 + timer.getMinutes() * 1.2 - y);
 
     set_y_align(calculatedMargin);
-
-    /***
-    ##
-    for some reason after some time scroll change time_line postition above the one which are with respect with time elapsed
-    ##***/
-
     hr.current.style.top = `${calculatedMargin}px`;
   };
 
@@ -231,10 +240,9 @@ export default function CalendarPage(props) {
     });
   };
 
-  const handleMonthChange = (prevDate, sign) => {
-    // Prevmonth conditional styling remooval
+  const handleMonthChange = async (prevDate, sign) => {
     update_styling();
-
+    set_scale_date(!scale_date);
     month === 0
       ? setDate(
           new Date(
@@ -250,19 +258,43 @@ export default function CalendarPage(props) {
             prevDate.getDate()
           )
         );
+
+    if (sign < 0) {
+      let x = new Promise((resolve, reject) => {
+        resolve(set_month_title_x_neg(month_title_x_neg - 30));
+      });
+      await x;
+      set_month_animate_x(month_title_x_neg);
+      set_month_title_x_pos(30);
+    } else {
+      let y = new Promise((resolve, reject) => {
+        resolve(set_month_title_x_pos(month_title_x_pos + 30));
+      });
+      await y;
+      set_month_animate_x(month_title_x_pos);
+      set_month_title_x_neg(-30);
+    }
   };
 
   const handleDayTimeChoose = (elem, value) => {
-    if (elem.target.style.backgroundColor) {
-      elem.target.style.backgroundColor = "#B4B7FA";
+    if (elem.target.style.backgroundColor == "rgb(235, 236, 253)") {
+      elem.target.style.backgroundColor = "rgb(180, 183, 250)";
       set_is_time_active(true);
-      set_active_time(value);
+      dispatch(add_to_remooval(value));
+    } else if (elem.target.style.backgroundColor == "rgb(180, 183, 250)") {
+      elem.target.style.backgroundColor = "rgb(235, 236, 253)";
+      dispatch(remove_from_remooval(value));
+      if (remooving_interviews.length == 1) {
+        set_is_time_active(false);
+      }
     }
   };
 
   const removeActiveTime = () => {
-    document.getElementById(active_time).style.backgroundColor = null;
-    dispatch(remove_reservation(active_time));
+    remooving_interviews.map((time) => {
+      dispatch(remove_reservation(time));
+      document.getElementById(time).style.backgroundColor = null;
+    });
     set_is_time_active(!_is_time_active);
   };
 
@@ -271,6 +303,12 @@ export default function CalendarPage(props) {
     let el = document.getElementById(new_event);
     if (el != null) {
       el.style.backgroundColor = "#EBECFD";
+      el.style.scale = 2;
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          el.style.scale = 1;
+        }, 100);
+      });
     }
   };
 
@@ -281,21 +319,35 @@ export default function CalendarPage(props) {
   return (
     <>
       <Wrapper>
-        {is_popup_shown && (
-          <PopUp_reservations
-            handlePopUpSubmit={handlePopUpSubmit}
-            handlePopUpClose={handlePopUpClose}
-          />
-        )}
-        <CalendarWindow>
+        <AnimatePresence initial={false}>
+          {is_popup_shown && (
+            <PopUp_reservations
+              handlePopUpSubmit={handlePopUpSubmit}
+              handlePopUpClose={handlePopUpClose}
+            />
+          )}
+        </AnimatePresence>
+
+        <CalendarWindow
+          initial={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          animate={{ opacity: 1 }}
+        >
           <Header>
-            <p style={{ marginRight: "20px" }}>Interview Calendar</p>
-            <AddIcon
-              src="add-sign.png"
-              onClick={() => {
-                set_is_popup_shown(true);
-              }}
-            ></AddIcon>
+            <HeaderP>Interview Calendar</HeaderP>
+            <IconContainer
+              justify={"end"}
+              right={`${is_mobile ? "5vh" : "8vh"}`}
+            >
+              <AddIcon
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 1 }}
+                src="add-sign.png"
+                onClick={() => {
+                  set_is_popup_shown(true);
+                }}
+              ></AddIcon>
+            </IconContainer>
           </Header>
           <DaysOptionsSliderWrapper>
             <DaysOptionsSliderContentWindow>
@@ -305,37 +357,67 @@ export default function CalendarPage(props) {
                   handleHorizontalScroll(event.currentTarget.scrollLeft)
                 }
               >
-                <WeekDaysTitlesTable>
-                  <DateSlider
-                    onMouseMove={handleMouseMoove}
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                  >
-                    {daysRange.map((day) => (
-                      <SliderDay
-                        day={day}
-                        date={date}
-                        key={day}
-                        handleHorizontalScroll={handleHorizontalScroll}
-                      ></SliderDay>
-                    ))}
-                  </DateSlider>
-                </WeekDaysTitlesTable>
+                <DateSlider
+                  onMouseMove={handleMouseMoove}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                >
+                  {daysRange.map((day) => (
+                    <SliderDay
+                      day={day}
+                      date={date}
+                      key={day}
+                      handleHorizontalScroll={handleHorizontalScroll}
+                      scale={scale_date}
+                    ></SliderDay>
+                  ))}
+                </DateSlider>
               </WeekDaysTitlesLine>
               <YearMonthChoiceLine>
-                <MonthSliderIcon
-                  src="less-icon.png"
-                  onClick={(e) => handleMonthChange(date, -1)}
-                  style={{ justifySelf: "start" }}
-                ></MonthSliderIcon>
-                <MonthYearChoice>
-                  {monthRange[date.getMonth()]} {date.getFullYear()}{" "}
-                </MonthYearChoice>
-                <MonthSliderIcon
-                  src="more-icon.png"
-                  onClick={(e) => handleMonthChange(date, 1)}
-                  style={{ justifySelf: "end" }}
-                ></MonthSliderIcon>
+                <IconContainer justify={"start"}>
+                  <MonthSliderIcon
+                    whileHover={{ scale: 1.4 }}
+                    whileTap={{ scale: 0.8, x: -10 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                    }}
+                    src="less-icon.png"
+                    onClick={(e) => {
+                      handleMonthChange(date, -1);
+                    }}
+                  ></MonthSliderIcon>
+                </IconContainer>
+                <AnimatePresence>
+                  <MonthYearChoice
+                    animate={{
+                      x: [month_animate_x, 0],
+                      // opacity: month_title_opacity,
+                      transition: {
+                        duration: 0.4,
+                        type: "spring",
+                      },
+                    }}
+                  >
+                    {monthRange[date.getMonth()]} {date.getFullYear(1)}{" "}
+                  </MonthYearChoice>
+                </AnimatePresence>
+                <IconContainer justify={"end"}>
+                  <MonthSliderIcon
+                    whileHover={{ scale: 1.4 }}
+                    whileTap={{ scale: 0.8, x: 10 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                    }}
+                    src="more-icon.png"
+                    onClick={(e) => {
+                      handleMonthChange(date, 1);
+                    }}
+                  ></MonthSliderIcon>
+                </IconContainer>
               </YearMonthChoiceLine>
             </DaysOptionsSliderContentWindow>
           </DaysOptionsSliderWrapper>
@@ -391,13 +473,29 @@ export default function CalendarPage(props) {
                 navigateToToday();
               }}
             >
-              Today
+              <FooterParagraphP whileHover={{ scale: 1.2 }}>
+                Today
+              </FooterParagraphP>
             </FooterParagraph>
-            {_is_time_active && (
-              <FooterParagraph onClick={removeActiveTime}>
-                Delete
-              </FooterParagraph>
-            )}
+            <AnimatePresence>
+              {_is_time_active && (
+                <FooterParagraph onClick={removeActiveTime}>
+                  <FooterParagraphP
+                    whileHover={{ scale: 1.2 }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                    }}
+                    exit={{ scale: 0 }}
+                  >
+                    Delete
+                  </FooterParagraphP>
+                </FooterParagraph>
+              )}
+            </AnimatePresence>
           </CalendarFooter>
         </CalendarWindow>
       </Wrapper>

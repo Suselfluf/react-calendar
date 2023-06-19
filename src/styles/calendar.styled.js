@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { device } from "../consts/Consts";
+import { motion } from "framer-motion";
 
 export const Wrapper = styled.div`
   font-size: 2.5em;
@@ -12,7 +13,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const CalendarWindow = styled.div`
+export const CalendarWindow = styled(motion.div)`
   color: #030303;
   margin: auto;
   display: block;
@@ -20,20 +21,20 @@ export const CalendarWindow = styled.div`
   background-color: #ffffff;
   z-index: 998;
   @media ${device.mobile} {
-    width: 740px;
+    width: 610px;
+    border-radius: 20px;
   }
   @media ${device.mobileSmall} {
   }
 `;
 
 export const Header = styled.div`
-  height: 148px;
+  height: 88px;
   display: grid;
   align-items: center;
-  justify-items: start;
+  justify-items: center;
   @media ${device.mobile} {
     grid-template-columns: 2fr 1fr;
-    margin: 0 0 0 5%;
   }
   @media ${device.mobileSmall} {
     grid-template-columns: 70% 30%;
@@ -44,17 +45,30 @@ export const Header = styled.div`
   }
 `;
 
-export const AddIcon = styled.img`
+export const HeaderP = styled.p`
+  margin: 0 20px 0 10%;
+
+  @media ${device.mobile} {
+    // grid-template-columns: 2fr 1fr;
+    font-size: 2rem;
+  }
+`;
+export const IconContainer = styled(motion.div)`
+  justify-self: ${(props) => props.justify};
+  margin-right: ${(props) => props.right};
+`;
+export const AddIcon = styled(motion.img)`
+  cursor: pointer;
   @media ${device.mobile} {
     width: 30px;
-    padding-left: 60%;
   }
   @media ${device.mobileSmall} {
     width: 20px;
   }
 `;
 
-export const MonthYearChoice = styled.p`
+export const MonthYearChoice = styled(motion.p)`
+  margin: 0;
   @media ${device.mobile} {
     font-size: 1.1rem;
   }
@@ -65,10 +79,10 @@ export const MonthYearChoice = styled.p`
 
 export const DaysOptionsSliderWrapper = styled.div`
   background-color: #f6f6f6;
-  height: 168px;
+  width: 99.7%;
   border: 1px solid #ebebeb;
   @media ${device.mobile} {
-    width: 738px;
+    height: 125px;
   }
   @media ${device.mobileSmall} {
     height: 98px;
@@ -77,6 +91,8 @@ export const DaysOptionsSliderWrapper = styled.div`
 
 export const DaysOptionsSliderContentWindow = styled.div`
   margin-left: 13%;
+  display: grid;
+  grid-template-columns: 1fr;
   @media ${device.mobileSmall} {
   }
 `;
@@ -84,7 +100,7 @@ export const DaysOptionsSliderContentWindow = styled.div`
 export const WeekDaysTitlesLine = styled.div`
   overflow-x: scroll;
   overflow-y: hidden;
-  width: 95%;
+  scroll-snap-type: x mandotary;
 
   &::-webkit-scrollbar {
     width: 0;
@@ -93,18 +109,18 @@ export const WeekDaysTitlesLine = styled.div`
 
   @media ${device.mobile} {
     font-size: 1.2rem;
-    height: 93px;
+    height: 75px;
+    width: 88%;
   }
   @media ${device.mobileSmall} {
     height: 63px;
-    width: 95%;
+    width: 92%;
   }
 `;
 
-export const WeekDaysTitlesTable = styled.div``;
-
 export const DateSlider = styled.div`
   @media ${device.mobile} {
+    margin-top: 2vh;
     display: flex;
     position: relative;
     alignitems: center;
@@ -117,7 +133,7 @@ export const DateSlider = styled.div`
 `;
 
 export const CalendarBody = styled.div`
-  height: 905px;
+  height: 500px;
   display: grid;
   position: relative;
   grid-template-columns: 13% 87%;
@@ -129,6 +145,8 @@ export const CalendarBody = styled.div`
 
 export const TimePickerBody = styled.div`
   overflow-x: scroll;
+  // scroll-snap-align: center;
+  // scroll-snap-type: x mandotary
   cursor: grabbing;
   &::-webkit-scrollbar {
     width: 0;
@@ -179,7 +197,7 @@ export const YearMonthChoiceLine = styled.div`
   align-items: center;
   justify-items: center;
   @media ${device.mobile} {
-    margin: 5px 1.9rem 0 2rem;
+    margin-right: 12%;
   }
   @media ${device.mobileSmall} {
     margin-right: 5%;
@@ -187,7 +205,8 @@ export const YearMonthChoiceLine = styled.div`
   }
 `;
 
-export const MonthSliderIcon = styled.img`
+export const MonthSliderIcon = styled(motion.img)`
+  cursor: pointer;
   width: 30px;
   @media ${device.mobileSmall} {
     width: 20px;
@@ -195,10 +214,11 @@ export const MonthSliderIcon = styled.img`
 `;
 
 export const SliderDaysNamesP = styled.p`
-  font-size: 1rem;
+  margin: 0;
+  font-size: 0.8rem;
   font-weight: bold;
   @media ${device.mobile} {
-    width: 92px;
+    width: 76px; // 92
   }
   @media ${device.mobileSmall} {
     font-size: 0.7rem;
@@ -210,7 +230,7 @@ export const TimePickerBodyColumn = styled.div`
   font-size: 0.8rem;
 
   @media ${device.mobile} {
-    width: 92px;
+    width: 76px;
     margin: 0;
   }
   @media ${device.mobileSmall} {
@@ -220,7 +240,8 @@ export const TimePickerBodyColumn = styled.div`
 `;
 
 export const SliderDatesP = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  margin: 0;
   @media ${device.mobileSmall} {
     font-size: 1.1rem;
     margin: 0;
@@ -228,12 +249,22 @@ export const SliderDatesP = styled.p`
   }
 `;
 
-export const TimePickerCell = styled.p`
+export const SliderSingleDayDiv = styled(motion.div)`
+  display: grid;
+  grid-template-columns: 1fr;
+  scroll-snap-align: center;
+  grid-row-gap: 10px;
+  @media ${device.mobileSmall} {
+    margin-top: 1vh;
+  }
+`;
+
+export const TimePickerCell = styled(motion.p)`
   margin: 0;
   border: #e6e6e6 1px solid;
   border-left: 0px;
   @media ${device.mobile} {
-    width: 92px;
+    width: 76px; // 92
     height: 70px;
   }
   @media ${device.mobileSmall} {
@@ -253,15 +284,22 @@ export const CalendarFooter = styled.div`
   @media ${device.mobileSmall} {
     height: 8vh;
   }
+  @media ${device.mobile} {
+    border-radius: 20px;
+  }
 `;
 
-export const FooterParagraph = styled.p`
+export const FooterParagraph = styled.div`
   color: #eb473d;
   font-size: 1.2rem;
   @media ${device.mobile} {
   }
   @media ${device.mobileSmall} {
   }
+`;
+
+export const FooterParagraphP = styled(motion.p)`
+  cursor: pointer;
 `;
 
 export const ActiveSliderDate = styled.p`
@@ -280,15 +318,15 @@ export const TimeLineHr = styled.hr`
   background: #eb473d;
   position: absolute;
   margin: 10px 0 0 13%;
-  width: 642px;
+  width: 529px;
   overflow: hidden;
   @media ${device.mobileSmall} {
     top: -5px;
-    width: 85%;
+    width: 86.5%;
   }
 `;
 
-export const PopUpBackground = styled.div`
+export const PopUpBackground = styled(motion.d)`
   display: flex;
   position: fixed;
   width: 100%;
@@ -301,7 +339,7 @@ export const PopUpBackground = styled.div`
   }
 `;
 
-export const PopUpWrapperDiv = styled.div`
+export const PopUpWrapperDiv = styled(motion.div)`
   display: grid;
   position: absolute;
   border-radius: 15px;
@@ -312,10 +350,12 @@ export const PopUpWrapperDiv = styled.div`
   opacity: 100%;
   @media ${device.mobileSmall} {
     width: 85%;
+    margin-bottom: 70px;
   }
 `;
 
 export const PopUpContentHeaderP = styled.p`
+  cursor: default;
   font-size: 1.6rem;
   margin-bottom: 1%;
   text-align: center;
@@ -327,6 +367,7 @@ export const PopUpContentHeaderP = styled.p`
 `;
 
 export const PopUpContentSubHeaderP = styled.p`
+  cursor: default;
   margin: 0;
   font-size: 1.3rem;
 `;
@@ -352,8 +393,9 @@ export const PopUpContentButtonsDiv = styled.div`
   grid-template-columns: 1fr 1fr;
 `;
 
-export const PopUpContentButtons = styled.div`
+export const PopUpContentButtons = styled(motion.div)`
   border-top: 1px solid #69697b;
+  cursor: pointer;
   border-${(props) => props.position}: 0.5px solid #69697b;
   height: 45px;
   display: flex;
@@ -363,6 +405,10 @@ export const PopUpContentButtons = styled.div`
   @media ${device.mobile} {
     font-size: 1.7rem;
   }
+`;
+
+export const ButtonTextP = styled(motion.p)`
+  width: 100%;
 `;
 
 export const PopUpValidationMessageP = styled.p`

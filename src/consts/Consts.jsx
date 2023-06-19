@@ -31,16 +31,17 @@ export const weekDayNames = ["M", "T", "W", "T", "F", "S", "S"];
 export const StyleActiveDay = (day, res) => {
   if (res === "mobile") {
     day.backgroundColor = "red";
-    day.borderRadius = "50px";
+    day.borderRadius = "87px";
     day.width = "25px";
-    day.marginLeft = "25%";
-    day.textAlign = "center";
+    day.height = "105%";
+    day.justifySelf = "center";
+    day.alignSelf = "center";
     day.color = "white";
     // day.cursor = "pointer";
   } else {
     day.backgroundColor = "red";
     day.borderRadius = "50px";
-    day.width = "28px";
+    day.width = "25px";
     day.marginLeft = "35%";
     day.textAlign = "center";
     // day.cursor = "pointer";
