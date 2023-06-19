@@ -6,6 +6,7 @@ import { StyleActiveDay } from "../consts/Consts";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
+
 export default function SliderDay(props) {
   const elem = useRef(null);
   const container = useRef(null);
@@ -40,7 +41,15 @@ export default function SliderDay(props) {
   return (
     <>
       <AnimatePresence initial={false}>
-        <styled.SliderSingleDayDiv ref={container}>
+        <styled.SliderSingleDayDiv
+          animate={{ scale: props.scale ? [1.2, 1] : [1.21, 1] }}
+          // transition={{ duration: 0.3 }}
+          transition={{
+            duration: 0.7,
+            type: "spring",
+          }}
+          ref={container}
+        >
           <styled.SliderDaysNamesP>
             {
               weekDayNames[

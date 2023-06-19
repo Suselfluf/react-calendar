@@ -36,6 +36,12 @@ export const reservationSlicer = createSlice({
     add_to_remooval: (state, action) => {
       state.remooving_reservations.push(action.payload);
     },
+    remove_from_remooval: (state, action) => {
+      const removal = action.payload;
+      state.remooving_reservations = state.remooving_reservations.filter(
+        (item) => item !== removal
+      );
+    },
   },
 });
 
@@ -44,6 +50,7 @@ export const {
   add_reservation,
   remove_reservation,
   add_to_remooval,
+  remove_from_remooval,
 } = reservationSlicer.actions;
 
 export const has_duplicates = (state, date) => {

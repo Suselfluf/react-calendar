@@ -22,6 +22,7 @@ export const CalendarWindow = styled(motion.div)`
   z-index: 998;
   @media ${device.mobile} {
     width: 610px;
+    border-radius: 20px;
   }
   @media ${device.mobileSmall} {
   }
@@ -66,7 +67,7 @@ export const AddIcon = styled(motion.img)`
   }
 `;
 
-export const MonthYearChoice = styled.p`
+export const MonthYearChoice = styled(motion.p)`
   margin: 0;
   @media ${device.mobile} {
     font-size: 1.1rem;
@@ -282,6 +283,9 @@ export const CalendarFooter = styled.div`
   gap: 10vw;
   @media ${device.mobileSmall} {
     height: 8vh;
+  }
+  @media ${device.mobile} {
+    border-radius: 20px;
   }
 `;
 

@@ -34,9 +34,10 @@ import { removeStyle } from "../consts/Consts.jsx";
 import {
   remove_reservation,
   add_to_remooval,
+  remove_from_remooval,
 } from "../redux/models/reservations/reservationSlice.js";
 import PopUp_reservations from "../components/Pop-ups/PopUp_reservations.jsx";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motionValue, useMotionValue } from "framer-motion";
 
 export default function CalendarPage(props) {
   const weekDaysTopSlider = useRef(null);
@@ -57,6 +58,10 @@ export default function CalendarPage(props) {
   const [is_pressed, set_is_pressed] = useState(false);
   const [difference, set_difference] = useState(0);
   const [initial, set_initial] = useState(0);
+  const [month_title_x_pos, set_month_title_x_pos] = useState(120);
+  const [month_title_x_neg, set_month_title_x_neg] = useState(-120);
+  const [month_animate_x, set_month_animate_x] = useState(0);
+  const [scale_date, set_scale_date] = useState(false);
 
   const initialDate = new Date(
     date.getFullYear(),
@@ -155,6 +160,7 @@ export default function CalendarPage(props) {
   };
 
   const navigateToToday = () => {
+    set_scale_date(!scale_date);
     setDate(timer);
     reservations.forEach((value) => {
       let prev_res_el = document.getElementById(value);
@@ -211,12 +217,6 @@ export default function CalendarPage(props) {
           timer.getHours() * 72 + timer.getMinutes() * 1.2 - y);
 
     set_y_align(calculatedMargin);
-
-    /***
-    ##
-    for some reason after some time scroll change time_line postition above the one which are with respect with time elapsed
-    ##***/
-
     hr.current.style.top = `${calculatedMargin}px`;
   };
 
@@ -240,10 +240,9 @@ export default function CalendarPage(props) {
     });
   };
 
-  const handleMonthChange = (prevDate, sign) => {
-    // Prevmonth conditional styling remooval
+  const handleMonthChange = async (prevDate, sign) => {
     update_styling();
-
+    set_scale_date(!scale_date);
     month === 0
       ? setDate(
           new Date(
@@ -259,13 +258,35 @@ export default function CalendarPage(props) {
             prevDate.getDate()
           )
         );
+
+    if (sign < 0) {
+      let x = new Promise((resolve, reject) => {
+        resolve(set_month_title_x_neg(month_title_x_neg - 30));
+      });
+      await x;
+      set_month_animate_x(month_title_x_neg);
+      set_month_title_x_pos(30);
+    } else {
+      let y = new Promise((resolve, reject) => {
+        resolve(set_month_title_x_pos(month_title_x_pos + 30));
+      });
+      await y;
+      set_month_animate_x(month_title_x_pos);
+      set_month_title_x_neg(-30);
+    }
   };
 
   const handleDayTimeChoose = (elem, value) => {
-    if (elem.target.style.backgroundColor) {
-      elem.target.style.backgroundColor = "#B4B7FA";
+    if (elem.target.style.backgroundColor == "rgb(235, 236, 253)") {
+      elem.target.style.backgroundColor = "rgb(180, 183, 250)";
       set_is_time_active(true);
       dispatch(add_to_remooval(value));
+    } else if (elem.target.style.backgroundColor == "rgb(180, 183, 250)") {
+      elem.target.style.backgroundColor = "rgb(235, 236, 253)";
+      dispatch(remove_from_remooval(value));
+      if (remooving_interviews.length == 1) {
+        set_is_time_active(false);
+      }
     }
   };
 
@@ -282,6 +303,12 @@ export default function CalendarPage(props) {
     let el = document.getElementById(new_event);
     if (el != null) {
       el.style.backgroundColor = "#EBECFD";
+      el.style.scale = 2;
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          el.style.scale = 1;
+        }, 100);
+      });
     }
   };
 
@@ -341,6 +368,7 @@ export default function CalendarPage(props) {
                       date={date}
                       key={day}
                       handleHorizontalScroll={handleHorizontalScroll}
+                      scale={scale_date}
                     ></SliderDay>
                   ))}
                 </DateSlider>
@@ -349,20 +377,45 @@ export default function CalendarPage(props) {
                 <IconContainer justify={"start"}>
                   <MonthSliderIcon
                     whileHover={{ scale: 1.4 }}
-                    whileTap={{ scale: 0.8 }}
+                    whileTap={{ scale: 0.8, x: -10 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                    }}
                     src="less-icon.png"
-                    onClick={(e) => handleMonthChange(date, -1)}
+                    onClick={(e) => {
+                      handleMonthChange(date, -1);
+                    }}
                   ></MonthSliderIcon>
                 </IconContainer>
-                <MonthYearChoice>
-                  {monthRange[date.getMonth()]} {date.getFullYear(1)}{" "}
-                </MonthYearChoice>
+                <AnimatePresence>
+                  <MonthYearChoice
+                    animate={{
+                      x: [month_animate_x, 0],
+                      // opacity: month_title_opacity,
+                      transition: {
+                        duration: 0.4,
+                        type: "spring",
+                      },
+                    }}
+                  >
+                    {monthRange[date.getMonth()]} {date.getFullYear(1)}{" "}
+                  </MonthYearChoice>
+                </AnimatePresence>
                 <IconContainer justify={"end"}>
                   <MonthSliderIcon
                     whileHover={{ scale: 1.4 }}
-                    whileTap={{ scale: 0.8 }}
+                    whileTap={{ scale: 0.8, x: 10 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                    }}
                     src="more-icon.png"
-                    onClick={(e) => handleMonthChange(date, 1)}
+                    onClick={(e) => {
+                      handleMonthChange(date, 1);
+                    }}
                   ></MonthSliderIcon>
                 </IconContainer>
               </YearMonthChoiceLine>

@@ -36,7 +36,6 @@ export default function PopUp_reservations(props) {
 
   const handleSubmitForm = () => {
     let formated_date = `${date_value}:00:00`; // Change with respect to new format of date reservations
-
     let val = has_duplicates(reservations, formated_date);
 
     if (date_value.length < 10) {
@@ -77,7 +76,7 @@ export default function PopUp_reservations(props) {
             Enter a valid time for planned interview:
           </styled.PopUpContentSubHeaderP>
           <styled.PopUpContentInputForm
-            placeholder="YYYY M DD H | HH"
+            placeholder="YYYY M(MM) DD H(HH) "
             value={date_value}
             onChange={handleInputChange}
             onKeyDown={(key) => handleKeyEvent(key)}
